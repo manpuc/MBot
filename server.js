@@ -1,5 +1,5 @@
 const http = require("http");
-const querystring = require("querystring");
+const querystring = require("query-string");
 
 //GASでwakeさせること。
 
