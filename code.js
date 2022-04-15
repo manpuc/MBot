@@ -8,27 +8,6 @@ const client = new Client({
   ]
 });
 
-/*
-GatewayIntentBitsの項目リスト
-Guilds
-GuildMembers
-GuildBans
-GuildEmojisAndStickers
-GuildIntegrations
-GuildWebhooks
-GuildInvites
-GuildVoiceStates
-GuildPresences
-GuildMessages
-GuildMessageReactions
-GuildMessageTyping
-DirectMessages
-DirectMessageReactions
-DirectMessageTyping: 16384,
-MessageContent: 32768,
-GuildScheduledEvents: 65536
-*/
-
 client.on("ready", () => {
   console.log("Bot準備完了！");
 });
