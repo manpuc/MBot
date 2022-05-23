@@ -14,7 +14,7 @@ client.on("ready", () => {
 
 //ここから
 
-client.on("message", message =>{
+client.on("messageCreate", message =>{
   if (message.content === "hello."){
     message.channel.send(`hello! ${message.author}`)
   }
