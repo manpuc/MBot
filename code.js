@@ -2,6 +2,8 @@ const { Discord , Client, GatewayIntentBits , EmbedBuilder , userMention , Messa
 
 const { poll } = require('discord.js-poll');
 
+
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -100,12 +102,12 @@ client.on("interactionCreate", async i => {
 	      }], ephemeral: true});
     }
     module.exports = {
-          name: 'poll',
-          description: 'Create a poll',
-          usage: 'Title + Option 1 + Option 2 + Option 3 + etc',
-          execute(client, message, args) {
-            poll(message, args, '+', '#00D1CD');
-          },
+        name: 'poll',
+        description: 'Create a poll',
+        usage: 'Title + Option 1 + Option 2 + Option 3 + etc',
+        execute(client, message, args) {
+          poll(message, args, '+', '#E841C4');
+        },
     };
 });
     /*module.exports = {
@@ -116,6 +118,5 @@ client.on("interactionCreate", async i => {
           poll(message, args, '+', '#00D1CD');
         },
     };*/
-
 //process.exit()
 client.login(process.env.DISCORD_BOT_TOKEN);
