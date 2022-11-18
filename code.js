@@ -1,5 +1,7 @@
 const { Client, GatewayIntentBits , EmbedBuilder , userMention } = require("discord.js");
 
+const Discord = require('discord.js')
+const prefix = '!'
 
 const client = new Client({
   intents: [
@@ -53,6 +55,10 @@ client.on("ready", async () => {
         name: 'hello',
         description: 'あいさつ返す',
       },
+      {
+        name: 'poll',
+        description: '簡易投票',
+      },
     ];
     await client.application.commands.set(data);
     console.log("COMMANDS OK!");
@@ -93,6 +99,45 @@ client.on("interactionCreate", async (i) => {
           timestamp: new Date()
 	      }], ephemeral: true});
     }
+     if (!i.content.startsWith(prefix)) return
+         const [command, ...args] = i.content.slice(prefix.length).split(' ')
+         const emojis = ['🇦', '🇧', '🇨', '🇩']
+         if (command === 'poll') {
+           const [title, ...choices] = args
+           if (!title) return i.channel.send('タイトルを指定してください')
+           if (choices.length < 2 || choices.length > emojis.length)
+             return i.channel.send(`選択肢は2から${emojis.length}つを指定してください`); 
+           const embed = new Discord.MessageEmbed().setTitle(title).setDescription(choices.map((c,i)=> `${emojis[i]} ${c}`).join('\n'))
+           const poll = await i.channel.send({
+             embeds: [embed]
+           });
+           emojis.slice(0, choices.length).forEach(emoji => poll.react(emoji))
+           embed.setFooter({
+            text: `集計時は !endpoll ${poll.channel.id} ${poll.id} と送信してください。`
+           })
+           poll.edit({embeds:[embed]});
+           return;
+         }
+         if (command === 'endpoll') {
+          const [cid, mid] = args;
+          if (!cid || !mid) return i.channel.send('IDが指定されていません。');
+          const channel = await i.guild.channels.fetch(cid);
+          const poll = await channel.messages.fetch(mid);
+          if (poll.author.id !== client.user.id) return;
+          if (poll.embeds[0]) return;
+          let result = "投票結果";
+          for (let i = 0; poll.reactions.cache.get(emojis[i]) && i < emojis.length; i++){
+            const reaction = poll.reactions.cache.get(emojis[i])
+            result = `${result}\n${emojis[i]}：${reaction.users.cache.has(client.user.id)?reaction.count-1:reaction.count}票`
+          }
+          poll.reply({
+            embeds:[
+              new Discord.MessageEmbed()
+                .setTitle(poll.embeds[0].title)
+                .setDescription(result)
+            ]
+          })
+      }
 });
 
 //process.exit()
