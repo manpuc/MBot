@@ -78,7 +78,7 @@ client.on("interactionCreate", async i => {
         await i.reply({ embeds: [e], ephemeral: true});
     }
       //hello command
-    if (i.commandName === 'hello') {ぽｌｌ
+    if (i.commandName === 'hello') {
         const userId = 'ゆーざーあいでぃー' //どうID習得するの
         await i.reply(`<@${userId}>ごきげんよう`);
     }
@@ -99,6 +99,14 @@ client.on("interactionCreate", async i => {
           timestamp: new Date()
 	      }], ephemeral: true});
     }
+    module.exports = {
+        name: 'poll',
+        description: 'Create a poll',
+        usage: 'Title + Option 1 + Option 2 + Option 3 + etc',
+        execute(client, message, args) {
+          poll(message, args, '+', '#00D1CD');
+        },
+    };
 });
 
 //process.exit()
