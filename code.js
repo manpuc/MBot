@@ -1,25 +1,99 @@
-const {Client, GatewayIntentBits} = require("discord.js");
+const { Client, GatewayIntentBits , EmbedBuilder , userMention } = require("discord.js");
+
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent
-  ]
+    GatewayIntentBits.MessageContent,
+  ],
 });
 
-client.on("ready", () => {
-  console.log("Bot準備完了！");
+client.on('ready', async() => {
+  client.user.setActivity('MBot', { type: "PLAYING" },{ status: "idle" });
+  console.log("MBot... Let's Gooooooooo!!!");
+});
+//sample (ネタコマンド　いつかけします。)
+client.on('messageCreate', message => {
+    if (message.author.bot)return;
+    if (message.content == 'hi') {
+        message.channel.send('hi!');
+    }
+});
+client.on('messageCreate', message => {
+    if (message.author.bot)return;
+    if (message.content == '職場体験いいな') {
+      for(var num = 0; num <5; num ++){
+        message.channel.send('<@900661796917108737>ｼｮｸﾊﾞﾀｲｹﾝ ｼﾀｶｯﾀ ﾎﾞｸﾓ...');
+      }     
+    }
+});
+client.on('messageCreate', message => {
+    if (message.author.bot)return;
+    if (message.content == 'MBot on top!') {
+      for(var num = 0; num <5; num ++){
+        message.channel.send('@everyone MBot on top!');
+      }
+    }
 });
 
-//ここから
+//コマンドの登録
+client.on("ready", async () => {
+    const data = [
+      {
+        name: 'ping',
+        description: '現在のpingを測定します',
+      },
+      {
+        name: 'menu',
+        description: 'メニューを表示します',
+      },
+      {
+        name: 'hello',
+        description: 'あいさつ返す',
+      },
+    ];
+    await client.application.commands.set(data);
+    console.log("COMMANDS OK!");
+});
 
-client.on("messageCreate", message =>{
-  if (message.content === "hello."){
-    message.channel.send(`hello! ${message.author}`)
-  }
-})
+//コマンドの内容
+//commands
+client.on("interactionCreate", async (i) => {
+    if (!i.isCommand()) {
+        return;
+    }
+      //ping command
+    if (i.commandName === 'ping') {
+        const e = new EmbedBuilder()
+          .setColor('E841C4')
+          .setTitle('Ping')
+          .setDescription(`${Date.now() - i.createdTimestamp}ms`)
+        await i.reply({ embeds: [e], ephemeral: true});
+    }
+      //hello command
+    if (i.commandName === 'hello') {
+        const userId = 'ゆーざーあいでぃー' //どうID習得するの
+        await i.reply(`<@${userId}>ごきげんよう`);
+    }
+    if (i.commandName === 'menu') {
+        new EmbedBuilder()
+          .setColor('E841C4')
+          //.setTitle('MBot めにゅ～')
+        await i.reply({ embeds: [
+          {
+          title: 'MBot めにゅ～',
+          /*url: 'いつか追加する',*/
+            fields: [
+              { name: '/ping', value: '現在のPingを計測します。' },
+              { name: '/hello', value: 'あいさつを返してくれます。ぼっちのあなたにも優しいbotです。' },
+            ],
+          color: 15221188,
+          timestamp: new Date()
+	      }], ephemeral: true});
+    }
+});
 
-//ここまで
-
+//process.exit()
 client.login(process.env.DISCORD_BOT_TOKEN);
