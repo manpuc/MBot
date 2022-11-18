@@ -99,6 +99,7 @@ client.on("interactionCreate", async i => {
           timestamp: new Date()
 	      }], ephemeral: true});
     }
+});
     module.exports = {
         name: 'poll',
         description: 'Create a poll',
@@ -107,7 +108,5 @@ client.on("interactionCreate", async i => {
           poll(message, args, '+', '#00D1CD');
         },
     };
-});
-
 //process.exit()
 client.login(process.env.DISCORD_BOT_TOKEN);
