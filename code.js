@@ -66,7 +66,7 @@ client.on("ready", async () => {
 
 //コマンドの内容
 //commands
-client.on("interactionCreate", async (i) => {
+client.on("interactionCreate", async i => {
     if (!i.isCommand()) {
         return;
     }
@@ -94,6 +94,7 @@ client.on("interactionCreate", async (i) => {
             fields: [
               { name: '/ping', value: '現在のPingを計測します。' },
               { name: '/hello', value: 'あいさつを返してくれます。ぼっちのあなたにも優しいbotです。' },
+              { name: '/poll', value: '簡易的な投票を開始できます。' },
             ],
           color: 15221188,
           timestamp: new Date()
