@@ -1,4 +1,4 @@
-const { Discord , Client, GatewayIntentBits , EmbedBuilder , userMention ,} = require("discord.js");
+const { Discord , Client, GatewayIntentBits , EmbedBuilder , userMention , MessageEmbed, Message , ColorResolvable } = require("discord.js");
 
 const { poll } = require('discord.js-poll');
 
@@ -56,7 +56,7 @@ client.on("ready", async () => {
       },
       {
         name: 'poll',
-        description: '簡易投票',
+        description: '簡易投票(未実装)',
       },
     ];
     await client.application.commands.set(data);
@@ -93,20 +93,29 @@ client.on("interactionCreate", async i => {
             fields: [
               { name: '/ping', value: '現在のPingを計測します。' },
               { name: '/hello', value: 'あいさつを返してくれます。ぼっちのあなたにも優しいbotです。' },
-              { name: '/poll', value: '簡易的な投票を開始できます。' },
+              { name: '/poll(実装予定)', value: '簡易的な投票を開始できます。' },
             ],
           color: 15221188,
           timestamp: new Date()
 	      }], ephemeral: true});
     }
-});
     module.exports = {
+          name: 'poll',
+          description: 'Create a poll',
+          usage: 'Title + Option 1 + Option 2 + Option 3 + etc',
+          execute(client, message, args) {
+            poll(message, args, '+', '#00D1CD');
+          },
+    };
+});
+    /*module.exports = {
         name: 'poll',
         description: 'Create a poll',
         usage: 'Title + Option 1 + Option 2 + Option 3 + etc',
         execute(client, message, args) {
           poll(message, args, '+', '#00D1CD');
         },
-    };
+    };*/
+
 //process.exit()
 client.login(process.env.DISCORD_BOT_TOKEN);
