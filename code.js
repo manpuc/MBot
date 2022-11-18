@@ -1,6 +1,6 @@
-const { Client, GatewayIntentBits , EmbedBuilder , userMention } = require("discord.js");
+const { Discord , Client, GatewayIntentBits , EmbedBuilder , userMention ,} = require("discord.js");
 
-
+const { poll } = require('discord.js-poll');
 
 const client = new Client({
   intents: [
@@ -78,7 +78,7 @@ client.on("interactionCreate", async i => {
         await i.reply({ embeds: [e], ephemeral: true});
     }
       //hello command
-    if (i.commandName === 'hello') {
+    if (i.commandName === 'hello') {ぽｌｌ
         const userId = 'ゆーざーあいでぃー' //どうID習得するの
         await i.reply(`<@${userId}>ごきげんよう`);
     }
