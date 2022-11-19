@@ -81,7 +81,7 @@ client.on("interactionCreate", async i => {
     }
       //hello command
     if (i.commandName === 'hello') {
-        let userId = JSON.parse(i.user.id);
+        let userId = JSON.parse(user.id);
         await i.reply(`<@${userId}>ごきげんよう`);
     }
     if (i.commandName === 'menu') {
