@@ -81,8 +81,8 @@ client.on("interactionCreate", async i => {
     }
       //hello command
     if (i.commandName === 'hello') {
-        let userId = JSON.parse(user.id);
-        await i.reply(`<@${userId}>ごきげんよう`);
+      console.log(i)
+        await i.reply(`<@${i}>ごきげんよう`);
     }
     if (i.commandName === 'menu') {
         new EmbedBuilder()
