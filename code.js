@@ -14,7 +14,7 @@ const client = new Client({
 });
 
 client.on('ready', async() => {
-  client.user.setActivity('MBot', { type: "PLAYING" },{ status: "idle" });
+  client.user.setActivity('MBot', { type: "PLAYING" },{ status: "idle" });　　
   console.log("MBot... Let's Gooooooooo!!!");
 });
 //sample (ネタコマンド　いつかけします。)
@@ -81,7 +81,7 @@ client.on("interactionCreate", async i => {
     }
       //hello command
     if (i.commandName === 'hello') {
-        const userId = 'ゆーざーあいでぃー' //どうID習得するの
+        let userId = JSON.parse(i.user.id);
         await i.reply(`<@${userId}>ごきげんよう`);
     }
     if (i.commandName === 'menu') {
