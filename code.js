@@ -84,20 +84,12 @@ client.on("interactionCreate", async i => {
             fields: [
               { name: '/ping', value: '現在のPingを計測します。' },
               { name: '/hello', value: 'あいさつを返してくれます。ぼっちのあなたにも優しいbotです。' },
-              { name: '/poll(実装予定)', value: '簡易的な投票を開始できます。' },
+              { name: '/poll', value: '簡易的な投票を開始できます。' },
             ],
           color: 15221188,
           timestamp: new Date()
 	      }], ephemeral: true});
     }
-    module.exports = {
-        name: 'poll',
-        description: 'Create a poll',
-        usage: 'Title + Option 1 + Option 2 + Option 3 + etc',
-        execute(client, message, args) {
-          poll(message, args, '+', '#E841C4');
-        },
-    };
 });
     /*module.exports = {
         name: 'poll',
