@@ -2,8 +2,6 @@ const { Discord , Client, GatewayIntentBits , EmbedBuilder , userMention , Messa
 
 const { poll } = require('discord.js-poll');
 
-
-
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
