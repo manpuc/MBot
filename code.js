@@ -24,14 +24,6 @@ client.on('messageCreate', message => {
 });
 client.on('messageCreate', message => {
     if (message.author.bot)return;
-    if (message.content == '職場体験いいな') {
-      for(var num = 0; num <5; num ++){
-        message.channel.send('<@900661796917108737>ｼｮｸﾊﾞﾀｲｹﾝ ｼﾀｶｯﾀ ﾎﾞｸﾓ...');
-      }     
-    }
-});
-client.on('messageCreate', message => {
-    if (message.author.bot)return;
     if (message.content == 'MBot on top!') {
       for(var num = 0; num <5; num ++){
         message.channel.send('@everyone MBot on top!');
