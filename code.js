@@ -50,7 +50,11 @@ client.on("ready", async () => {
       },
       {
         name: 'poll',
-        description: '簡易投票(未実装)',
+        description: '簡易投票(β)',
+        	usage: 'Title + Option 1 + Option 2 + Option 3 + etc',
+          execute(client, message, args) {
+		      poll(message, args, '+', '#00D1CD');
+	      },
       },
     ];
     await client.application.commands.set(data);
@@ -91,26 +95,6 @@ client.on("interactionCreate", async i => {
           color: 15221188,
           timestamp: new Date()
 	      }], ephemeral: true});
-    }
-    if (i.commandName === 'poll') {
-        const { options } = i;
-
-        const channel = options.getChannel("channel");
-        const description = options.getString("description");
-
-        const embed = new EmbedBuilder()
-            .setColor("E841C4")
-            .setDescription(description)
-            .setTimestamp();
-
-        try {
-            const m = await channel.send({ embeds: [embed] });
-            await m.react("✅");
-            await m.react("❌");
-            await i.reply({ content: "Poll was succesfully sent to the channel.", ephemeral: true });
-        } catch (err) {
-            console.log(err);
-        }
     }
 });
 
