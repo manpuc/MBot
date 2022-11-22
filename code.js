@@ -77,6 +77,7 @@ client.on("interactionCreate", async i => {
     }
       //hello command
     if (i.commandName === 'hello') {
+        //const e = new EmbedBuilder()
         await i.reply(`<@${i.user.id}>ごきげんよう`);
     }
     if (i.commandName === 'menu') {
