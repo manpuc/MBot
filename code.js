@@ -97,6 +97,23 @@ client.on("interactionCreate", async i => {
           timestamp: new Date()
 	      }], ephemeral: true});
     }
+    if (i.commandName === 'menu') {
+          data: new SlashCommandBuilder()
+        .setName("poll")
+        .setDescription("Create a poll and send it to a certain channel")
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+        .addStringOption(option =>
+            option.setName("description")
+                .setDescription("Describe the poll.")
+                .setRequired(true)
+        )
+        .addChannelOption(option =>
+            option.setName("channel")
+                .setDescription("Where do you want to send the poll to?")
+                .setRequired(true)
+                .addChannelTypes(ChannelType.GuildText)
+        ),
+    }
 });
     module.exports = {
         name: 'poll',
