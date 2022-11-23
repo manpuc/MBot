@@ -21,7 +21,7 @@ client.on('ready', async() => {
 client.on('messageCreate', message => {
     if (message.author.bot)return;
     if (message.content == 'hi') {
-        message.channel.send('hi!');
+        message.channel.send('spam!');
     }
 });
 client.on('messageCreate', message => {
