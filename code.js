@@ -21,7 +21,7 @@ client.on('ready', async() => {
 client.on('messageCreate', message => {
     if (message.author.bot)return;
     if (message.content == 'hi') {
-        message.channel.send('spam!');
+        message.channel.send('<@971353847408767007>はspamをやめろ！');
     }
 });
 client.on('messageCreate', message => {
