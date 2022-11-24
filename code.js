@@ -32,6 +32,31 @@ client.on('messageCreate', message => {
       }
     }
 });
+client.on('messageCreate', message => {
+    if (message.author.bot)return;
+    if (message.content == '/poll') {
+            async (interaction) =>{
+        const { options } = interaction;
+
+        const channel = options.getChannel("channel");
+        const description = options.getString("description");
+
+        const embed = new EmbedBuilder()
+            .setColor("Gold")
+            .setDescription(description)
+            .setTimestamp();
+
+        try {
+            const m = await channel.send({ embeds: [embed] });
+            await m.react("✅");
+            await m.react("❌");
+            await interaction.reply({ content: "Poll was succesfully sent to the channel.", ephemeral: true });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+      }
+});
 
 //コマンドの登録
 client.on("ready", async () => {
