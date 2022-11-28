@@ -32,33 +32,10 @@ client.on('messageCreate', message => {
       }
     }
 });
-client.on('messageCreate', message => {
-    if (message.author.bot)return;
-    if (message.content == '/poll') {
-            async (interaction) =>{
-        const { options } = interaction;
-
-        const channel = options.getChannel("channel");
-        const description = options.getString("description");
-
-        const embed = new EmbedBuilder()
-            .setColor("Gold")
-            .setDescription(description)
-            .setTimestamp();
-
-        try {
-            const m = await channel.send({ embeds: [embed] });
-            await m.react("✅");
-            await m.react("❌");
-            await interaction.reply({ content: "Poll was succesfully sent to the channel.", ephemeral: true });
-        } catch (err) {
-            console.log(err);
-        }
-    }
-      }
-});
-
-//コマンドの登録
+/*discordが推奨していない　そしてプライバシーの侵害になる　これってさpollコマンドかどうか識別するために一回このサーバーにメッセージ送って解析してるじゃん　悪意あるevelopperいたら全部メッセージ抽出できるよね　危ない
+僕は善意しかないでべろっぱーだよ？？？
+このサーバーにデータが送られた時点で何でもできるじゃん aa aa何でもできるじゃん　ってこと　だから認証済みotは正当な理由(ログ機能とか)がなければessageにはアクセスできない　だから代わりに
+それをだれが判断するの　meeeeeeeeeeeeee!!!*/
 client.on("ready", async () => {
     const data = [
       {
@@ -122,12 +99,7 @@ client.on("interactionCreate", async i => {
 	      }], ephemeral: true});
     }
       //poll
-    if (i.author.bot || i.channel.type === 'dm') return;
-       const messageArray = i.content.split(' ');
-       cont
-    if (i.commandName === 'poll') {
-      
-    }
+
 });
     /*module.exports = {
         name: 'poll',

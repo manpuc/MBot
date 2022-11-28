@@ -37,3 +37,11 @@ module.exports = {
         }
     }
 }
+
+    /*if (i.author.bot || i.channel.type === 'dm') return;
+       const messageArray = i.content.split(' ');
+       const cmd = messageArray[0];
+       const args = messageArray.slice(1);
+    if (i.commandName === 'poll') {
+      
+    }*/
