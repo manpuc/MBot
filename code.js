@@ -102,9 +102,6 @@ client.on("interactionCreate", async i => {
     }
       //hello command
     if (i.commandName === 'hello') {
-        const e = new EmbedBuilder()
-          .setColor('E841C4')
-          .setTitle('あいさつ')
         await i.reply(`${userMention(i.user.id)}ごきげんよう`);
     }
     if (i.commandName === 'menu') {
@@ -125,6 +122,9 @@ client.on("interactionCreate", async i => {
 	      }], ephemeral: true});
     }
       //poll
+    if (i.author.bot || i.channel.type === 'dm') return;
+       const messageArray = i.content.split(' ');
+       cont
     if (i.commandName === 'poll') {
       
     }
