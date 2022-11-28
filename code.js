@@ -105,7 +105,7 @@ client.on("interactionCreate", async i => {
         const e = new EmbedBuilder()
           .setColor('E841C4')
           .setTitle('あいさつ')
-        await i.reply(`<@${i.user.id}>ごきげんよう`);
+        await i.reply(`${userMention(i.user.id)}ごきげんよう`);
     }
     if (i.commandName === 'menu') {
         new EmbedBuilder()
@@ -124,26 +124,9 @@ client.on("interactionCreate", async i => {
           timestamp: new Date()
 	      }], ephemeral: true});
     }
+      //poll
     if (i.commandName === 'poll') {
-        const { options } = i;
       
-        const channel = options.getChannel("channel");
-        const description = options.getString("description");
-
-        const embed = new EmbedBuilder()
-              .setColor("Gold")
-              .setDescription(description)
-              .setTimestamp();
-
-        try {
-            const m = await channel.send({ embeds: [embed] });
-            await m.react("✅");
-            await m.react("❌");
-            await i.reply({ content: "Poll was succesfully sent to the channel.", ephemeral: true });
-        } catch (err) {
-              console.log(err);
-        }
-      await i.reply();
     }
 });
     /*module.exports = {
