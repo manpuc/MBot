@@ -18,7 +18,7 @@ client.on('ready', async() => {
   console.log("MBot... Let's Gooooooooo!!!");
 });
 //sample (ネタコマンド　いつかけします。)
-client.on('messageCreate', message => {
+/*client.on('messageCreate', message => {
     if (message.author.bot)return;
     if (message.content == 'hi') {
         message.channel.send('hi!');
@@ -31,11 +31,22 @@ client.on('messageCreate', message => {
         message.channel.send('@everyone MBot on top!');
       }
     }
-});
+});*/
 /*discordが推奨していない　そしてプライバシーの侵害になる　これってさpollコマンドかどうか識別するために一回このサーバーにメッセージ送って解析してるじゃん　悪意あるevelopperいたら全部メッセージ抽出できるよね　危ない
 僕は善意しかないでべろっぱーだよ？？？
-このサーバーにデータが送られた時点で何でもできるじゃん aa aa何でもできるじゃん　ってこと　だから認証済みotは正当な理由(ログ機能とか)がなければessageにはアクセスできない　だから代わりに
-それをだれが判断するの　meeeeeeeeeeeeee!!!*/
+このサーバーにデータが送られた時点で何でもできるじゃん aa aa何でもできるじゃん　ってこと　だから認証済みotは正当な理由(ログ機能とか)がなければessageにはアクセスできない　だから代わりにinteractionが実装された ほほぉだから使うのは推奨されてない
+プライバシーポリシーは？利用規約は？　あああ
+わかりましたけします　
+ それをだれが判断するの　meeeeeeeeeeeeee!!!*/
+
+module.exports = {
+	name: 'poll',
+	description: 'Create a poll',
+	usage: 'Title + Option 1 + Option 2 + Option 3 + etc',
+	execute(client, message, args) {
+		poll(message, args, '+', '#00D1CD');
+	},
+};
 client.on("ready", async () => {
     const data = [
       {
@@ -53,10 +64,6 @@ client.on("ready", async () => {
       {
         name: 'poll',
         description: '簡易投票(β)',
-        	usage: 'Title + Option 1 + Option 2 + Option 3 + etc',
-          execute(client, message, args) {
-		      poll(message, args, '+', '#00D1CD');
-	      },
       },
     ];
     await client.application.commands.set(data);
