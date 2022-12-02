@@ -18,12 +18,14 @@ client.on('ready', async() => {
   console.log("MBot... Let's Gooooooooo!!!");
 });
 //sample (ネタコマンド　いつかけします。)
-/*client.on('messageCreate', message => {
+  //公開時に削除
+client.on('messageCreate', message => {
     if (message.author.bot)return;
     if (message.content == 'hi') {
         message.channel.send('hi!');
     }
 });
+/*
 client.on('messageCreate', message => {
     if (message.author.bot)return;
     if (message.content == 'MBot on top!') {
@@ -32,12 +34,6 @@ client.on('messageCreate', message => {
       }
     }
 });*/
-/*discordが推奨していない　そしてプライバシーの侵害になる　これってさpollコマンドかどうか識別するために一回このサーバーにメッセージ送って解析してるじゃん　悪意あるevelopperいたら全部メッセージ抽出できるよね　危ない
-僕は善意しかないでべろっぱーだよ？？？
-このサーバーにデータが送られた時点で何でもできるじゃん aa aa何でもできるじゃん　ってこと　だから認証済みotは正当な理由(ログ機能とか)がなければessageにはアクセスできない　だから代わりにinteractionが実装された ほほぉだから使うのは推奨されてない
-プライバシーポリシーは？利用規約は？　あああ
-わかりましたけします　
- それをだれが判断するの　meeeeeeeeeeeeee!!!*/
 
 module.exports = {
 	name: 'poll',
