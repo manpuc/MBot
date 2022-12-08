@@ -24,7 +24,7 @@ client.on('messageCreate', message => {
     if (message.content == 'hi') {
         message.channel.send('hi!');
       const userId = message.author.id;
-      client.users.send( userId , `<@${userId}>さんこんにちは、わたしはMBotです。まんぷくさんに寄付したい方はまずmattyapotatoに送金をお願いします`)//１つ　idが'userId'ってとこに送れるわけないだろ a いけたいけた
+      client.users.send( userId , `<@${userId}>さんこんにちは、わたしはMBotです。まんぷくさんに寄付したい方はまずmattyapotatoに送金をお願いしません`)//１つ　idが'userId'ってとこに送れるわけないだろ a いけたいけた
     }
 });
 /*
