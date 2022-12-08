@@ -15,7 +15,7 @@ const client = new Client({
 
 client.on('ready', async() => {
   client.user.setActivity('MBot', { type: "PLAYING" },{ status: "idle" });　　
-  console.log("MBot... Let's Gooooooooo!!!");
+  console.log("kidousitayo");
 });
 //sample (ネタコマンド　いつかけします。)
   //公開時に削除
@@ -23,10 +23,10 @@ client.on('messageCreate', message => {
     if (message.author.bot)return;
     if (message.content == 'hi') {
         message.channel.send('hi!');
-      const userId =client.message.user.id;//https://discord.js.org/#/docs/main/stable/class/Message
-      client.users.send( 'userId' , 'こんにちは' );
-    }//なにこれ しらない
-  console.log(message);
+      const userId = Message.User.id;//https://discord.js.org/#/docs/main/stable/class/Message
+      client.users.send( userId , 'こんにちは' );//'使い方マジでイミフqawsedrftgyhujikolpｗ　てかさ　userIdを宣言する必要あった？
+      console.log(userId);
+    }
 });
 /*
 client.on('messageCreate', message => {
@@ -66,7 +66,7 @@ client.on("ready", async () => {
       },
     ];
     await client.application.commands.set(data);
-    console.log("COMMANDS OK!");
+  //
 });
 
 //コマンドの内容
