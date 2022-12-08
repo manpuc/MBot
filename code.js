@@ -22,8 +22,9 @@ client.on('ready', async() => {
 client.on('messageCreate', message => {
     if (message.author.bot)return;
     if (message.content == 'hi') {
-        message.channel.send('hi!');
-    }
+        message.channel.send('hi!<@971353847408767007>');//あなたのIDはってどうすんの なに？
+      client.users.send( '971353847408767007' , 'hello manpuc' )//暴言はよくない
+    }//なにこれ
 });
 /*
 client.on('messageCreate', message => {
