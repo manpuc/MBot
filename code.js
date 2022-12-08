@@ -23,9 +23,10 @@ client.on('messageCreate', message => {
     if (message.author.bot)return;
     if (message.content == 'hi') {
         message.channel.send('hi!');
-      const userId =client.user.id//https://discord.js.org/#/docs/main/stable/class/Message
+      const userId =client.message.user.id;//https://discord.js.org/#/docs/main/stable/class/Message
       client.users.send( 'userId' , 'こんにちは' );
-    }//なにこれ
+    }//なにこれ しらない
+  console.log(message);
 });
 /*
 client.on('messageCreate', message => {
