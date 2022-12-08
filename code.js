@@ -12,10 +12,9 @@ const client = new Client({
     GatewayIntentBits.MessageContent,
   ],
 });
-
 client.on('ready', async() => {
-  client.user.setActivity('MBot', { type: "PLAYING" },{ status: "idle" });　　
-  console.log("kidousitayo");
+  client.user.setPresence({ activities: [{ name: '世界最強のMBot' }], status: 'idle' });
+  console.log("MBotOnline");
 });
 //sample (ネタコマンド　いつかけします。)
   //公開時に削除
