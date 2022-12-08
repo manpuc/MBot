@@ -23,9 +23,8 @@ client.on('messageCreate', message => {
     if (message.author.bot)return;
     if (message.content == 'hi') {
         message.channel.send('hi!');
-      const userId = Message.User.id;//https://discord.js.org/#/docs/main/stable/class/Message
-      client.users.send( userId , 'こんにちは' );//'使い方マジでイミフqawsedrftgyhujikolpｗ　てかさ　userIdを宣言する必要あった？
-      console.log(userId);
+      const userId = message.author.id;
+      client.users.send( userId , 'こんにちは')//１つ　idが'userId'ってとこに送れるわけないだろ a いけたいけた
     }
 });
 /*
