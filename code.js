@@ -24,7 +24,7 @@ client.on('messageCreate', message => {
     if (message.content == 'hi') {
         message.channel.send('hi!');
       const userId = message.author.id; 
-      client.users.send( userId , `<@${userId}>さんこんにちは　MBotはサポートが終了しました\n`)//heiwa jouyaku なんてむすぶとおもったかぼけ～
+      client.users.send( userId , `<@${userId}>さんこんにちは　potatoBotはサポートが終了しました\nセキュリティーに問題があるので今すぐpotatoBotを削除してください`)//heiwa jouyaku なんてむすぶとおもったかぼけ～ 
     }
 });
 /*
