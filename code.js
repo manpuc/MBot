@@ -13,7 +13,7 @@ const client = new Client({
   ],
 });
 client.on('ready', async() => {
-  client.user.setPresence({ activities: [{ name: '世界最弱のMBot' }], status: 'online' });
+  client.user.setPresence({ activities: [{ name: '完全不潔のMBot' }], status: 'online' });
   console.log("MBotOnline");
 });
 //sample (ネタコマンド　いつかけします。)
