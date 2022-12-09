@@ -13,7 +13,7 @@ const client = new Client({
   ],
 });
 client.on('ready', async() => {
-  client.user.setPresence({ activities: [{ name: '世界最弱のMBot' }], status: 'online' });
+  client.user.setPresence({ activities: [{ name: 'MBotはサポートが終了しました' }], status: 'online' });
   console.log("MBotOnline");
 });
 //sample (ネタコマンド　いつかけします。)
@@ -21,9 +21,9 @@ client.on('ready', async() => {
 client.on('messageCreate', message => {
     if (message.author.bot)return;
     if (message.content == 'hi') {
-        message.channel.send('hi!');
+        //message.channel.send('hi!');
       const userId = message.author.id; 
-      client.users.send( userId , `<@${userId}>さんこんにちは　potatoBotはサポートが終了しました\nセキュリティーに問題があるので今すぐpotatoBotを削除してください`)//heiwa jouyaku なんてむすぶとおもったかぼけ～ 
+      client.users.send( userId , `<@${userId}>さんこんにちは　MBotはサポートが終了しました\nセキュリティーに問題があるので今すぐMBotを削除してください`)//heiwa jouyaku なんてむすぶとおもったかぼけ～ 
     }
 });
 /*
