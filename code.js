@@ -13,17 +13,17 @@ const client = new Client({
   ],
 });
 client.on('ready', async() => {
-  client.user.setPresence({ activities: [{ name: 'MBotはサポートが終了しました' }], status: 'online' });
+  client.user.setPresence({ activities: [{ name: '世界最弱のMBot' }], status: 'online' });
   console.log("MBotOnline");
 });
 //sample (ネタコマンド　いつかけします。)
   //公開時に削除
 client.on('messageCreate', message => {
     if (message.author.bot)return;
-    if (message.content == 'hi') {
-        //message.channel.send('hi!');
+    if (message.content == 'くぁｗせｄｒｆｔｇｙふじこｌｐ') {
+        message.channel.send(`${userMention(message.author.id)}とりま落ち着け。`);
       const userId = message.author.id; 
-      client.users.send( userId , `<@${userId}>さんこんにちは　MBotはサポートが終了しました\nセキュリティーに問題があるので今すぐMBotを削除してください`)//heiwa jouyaku なんてむすぶとおもったかぼけ～ 
+      client.users.send( userId , `<@${userId}>さんこんにちは　MBotはサポートが終了しました\nセキュリティーに問題があるので今すぐMBotを削除してください`)
     }
 });
 /*
