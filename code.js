@@ -26,13 +26,6 @@ client.on('messageCreate', message => {
       client.users.send( userId , `<@${userId}>さんこんにちは　MBotはサポートが終了しました\nセキュリティーに問題があるので今すぐMBotを削除してください`)
     }
 });
-client.on('messageCreate', message => {
-    if (message.author.bot)return;
-    if (message.content == '<@1040561874279870484> はなし相手こいつしかいない') {
-        const userId = message.author.id; 
-        message.channel.send(`${userMention(userId)}メンションするなぼけなす。`);
-    }
-});
 /*
 client.on('messageCreate', message => {
     if (message.author.bot)return;
