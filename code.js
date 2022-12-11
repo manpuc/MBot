@@ -13,7 +13,7 @@ const client = new Client({
   ],
 });
 client.on('ready', async() => {//完全不潔のMBot
-  client.user.setPresence({ activities: [{ name: 'manpucごみ' }], status: 'online' });
+  client.user.setPresence({ activities: [{ name: '完全不潔のMBot' }], status: 'online' });
   console.log("MBotOnline");
 });
 //sample (ネタコマンド　いつかけします。)
@@ -28,7 +28,7 @@ client.on('messageCreate', message => {
 });
 client.on('messageCreate', message => {
     if (message.author.bot)return;
-    if (message.content == '') {
+    if (message.content == '<@1040561874279870484> はなし相手こいつしかいない') {
         const userId = message.author.id; 
         message.channel.send(`${userMention(userId)}メンションするなぼけなす。`);
     }
