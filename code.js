@@ -12,8 +12,8 @@ const client = new Client({
     GatewayIntentBits.MessageContent,
   ],
 });
-client.on('ready', async() => {
-  client.user.setPresence({ activities: [{ name: 'ttyaPさん誕生日おめでとう!' }], status: 'online' });
+client.on('ready', async() => {//完全不潔のMBot
+  client.user.setPresence({ activities: [{ name: '完全不潔のMBot' }], status: 'online' });
   console.log("MBotOnline");
 });
 //sample (ネタコマンド　いつかけします。)
