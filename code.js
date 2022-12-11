@@ -20,7 +20,7 @@ client.on('ready', async() => {//完全不潔のMBot
   //公開時に削除
 client.on('messageCreate', message => {
     if (message.author.bot)return;
-    if (message.content == '<@1040561874279870484> はなし相手こいつしかいない') {
+    if (message.content == 'くぁｗせｄｒｆｔｇｙふじこｌｐ') {
         message.channel.send(`${userMention(message.author.id)}とりま落ち着け。`);
       const userId = message.author.id; 
       client.users.send( userId , `<@${userId}>さんこんにちは　MBotはサポートが終了しました\nセキュリティーに問題があるので今すぐMBotを削除してください`)
