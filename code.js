@@ -13,7 +13,7 @@ const client = new Client({
   ],
 });
 client.on('ready', async() => {//完全不潔のMBot
-  client.user.setPresence({ activities: [{ name: '絶妙に不潔なMBot' }], status: 'online' });//おいwww   
+  client.user.setPresence({ activities: [{ name: '絶妙に いや結構 不潔なMBot' }], status: 'online' });//おいwww   
                                                 //  ↑草　ｗｗｗｗｗｗｗｗｗ
   console.log("MBotOnline");
 });
