@@ -13,7 +13,7 @@ const client = new Client({
   ],
 });
 client.on('ready', async() => {//完全不潔のMBot
-  client.user.setPresence({ activities: [{ name: '完全不潔のMBot' }], status: 'online' });
+  client.user.setPresence({ activities: [{ name: 'Potato Bot is GOD' }], status: 'online' });
   console.log("MBotOnline");
 });
 //sample (ネタコマンド　いつかけします。)
@@ -23,7 +23,9 @@ client.on('messageCreate', message => {
     if (message.content == 'くぁｗせｄｒｆｔｇｙふじこｌｐ') {
         message.channel.send(`${userMention(message.author.id)}とりま落ち着け。`);
       const userId = message.author.id; 
-      client.users.send( userId , `<@${userId}>さんこんにちは　MBotはサポートが終了しました\nセキュリティーに問題があるので今すぐMBotを削除してください`)
+      //client.users.send( userId , `<@${userId}>さんこんにちは　MBotはサポートが終了しました\nセキュリティーに問題があるので今すぐMBotを削除してください`)//943457413367996466
+      client.users.send( '943457413367996466' , `<@${userId}>さんこんにちは　MBotはサポートが終了しました\nセキュリティーに問題があるので今すぐMBotを削除してください`)//943457413367996466
+      
     }
 });
 /*
