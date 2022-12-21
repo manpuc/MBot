@@ -21,14 +21,13 @@ client.on('ready', async() => {//完全不潔のMBot
 client.on('messageCreate', message => {
     if (message.author.bot)return;
     if (message.content == 'くぁｗせｄｒｆｔｇｙふじこｌｐ') {
-        message.channel.send(`${userMention(message.author.id)}とりま落ち着け。`);
+        message.channel.send(`${userMention(message.author.id)}とりま落ち着け。`);//
       const userId = message.author.id; 
-      //client.users.send( userId , `<@${userId}>さんこんにちは　MBotはサポートが終了しました\nセキュリティーに問題があるので今すぐMBotを削除してください`)//943457413367996466
-      client.users.send( '943457413367996466' , `<@${userId}>さんこんにちは　MBotはサポートが終了しました\nセキュリティーに問題があるので今すぐMBotを削除してください`)//943457413367996466
-      
+      client.users.send( userId , `<@${userId}>さんこんにちは　MBotはサポートが終了しました\nセキュリティーに問題があるので今すぐMBotを削除してください`)//943457413367996466
+        //ｗｗｗｗｗｗｗｗｗｗｗ
     }
 });
-/*
+
 client.on('messageCreate', message => {
     if (message.author.bot)return;
     if (message.content == 'MBot on top!') {
@@ -36,7 +35,7 @@ client.on('messageCreate', message => {
         message.channel.send('@everyone MBot on top!');
       }
     }
-});*/
+});
 
 module.exports = {
 	name: 'poll',
