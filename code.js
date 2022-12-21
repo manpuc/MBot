@@ -13,7 +13,7 @@ const client = new Client({
   ],
 });
 client.on('ready', async() => {//完全不潔のMBot
-  client.user.setPresence({ activities: [{ name: '絶妙に いや結構 不潔なMBot' }], status: 'online' });//おいwww   
+  client.user.setPresence({ activities: [{ name: '相当不潔なMBot' }], status: 'online' });//おいwww   
                                                 //  ↑草　ｗｗｗｗｗｗｗｗｗ
   console.log("MBotOnline");
 });
@@ -27,7 +27,13 @@ client.on('messageCreate', message => {
       client.users.send( userId , `<@${userId}>さんこんにちは　MBotはサポートが終了しました\nセキュリティーに問題があるので今すぐMBotを削除してください`)//943457413367996466
     }
 });
-
+client.on('messageCreate', message => {
+    if (message.author.bot)return;
+    if (message.content == 'MBot汚い') {
+        message.channel.send(`${userMention(message.author.id)}泣きました。`);
+    }
+});
+    //ここまで
 module.exports = {
 	name: 'poll',
 	description: 'Create a poll',
