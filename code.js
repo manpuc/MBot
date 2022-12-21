@@ -21,21 +21,11 @@ client.on('ready', async() => {//完全不潔のMBot
 client.on('messageCreate', message => {
     if (message.author.bot)return;
     if (message.content == 'くぁｗせｄｒｆｔｇｙふじこｌｐ') {
-        message.channel.send(`${userMention(message.author.id)}とりま落ち着け。`);//
+        message.channel.send(`${userMention(message.author.id)}とりまﾀﾋね。`);//ok　ごみ　将来の炎上要素wwwwwww
       const userId = message.author.id; 
       client.users.send( userId , `<@${userId}>さんこんにちは　MBotはサポートが終了しました\nセキュリティーに問題があるので今すぐMBotを削除してください`)//943457413367996466
-        //ｗｗｗｗｗｗｗｗｗｗｗ
     }
-});
-
-client.on('messageCreate', message => {
-    if (message.author.bot)return;
-    if (message.content == 'MBot on top!') {
-      for(var num = 0; num <5; num ++){
-        message.channel.send('@everyone MBot on top!');
-      }
-    }
-});
+});//w
 
 module.exports = {
 	name: 'poll',
@@ -102,17 +92,8 @@ client.on("interactionCreate", async i => {
           color: 15221188,
           timestamp: new Date()
 	      }], ephemeral: true});
-    }
-      //poll
-
+    } 
 });
-    /*module.exports = {
-        name: 'poll',
-        description: 'Create a poll',
-        usage: 'Title + Option 1 + Option 2 + Option 3 + etc',
-        execute(client, message, args) {
-          poll(message, args, '+', '#00D1CD');
-        },
-    };*/
+
 //process.exit()
-client.login(process.env.DISCORD_BOT_TOKEN);
+client.login(process.env.DISCORD_BOT_TOKEN)//w
