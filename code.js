@@ -88,7 +88,7 @@ client.on("interactionCreate", async i => {
             fields: [
               { name: '/ping', value: '現在のPingを計測します。' },
               { name: '/hello', value: 'あいさつを返してくれます。ぼっちのあなたにも優しいbotです。' },
-              { name: '/poll', value: '未実装' },
+              { name: '/poll', value: '夢物語。おそらくもう開発しない' },
             ],
           color: 15221188,
           timestamp: new Date()
