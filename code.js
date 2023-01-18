@@ -1,4 +1,6 @@
 const {
+  REST,
+  Routes,
   Discord,
   Client,
   GatewayIntentBits,
@@ -50,10 +52,6 @@ client.on("messageCreate", (message) => {
 client.on("ready", async () => {
   const data = [
     {
-      name: "ping",
-      description: "現在のpingを測定します",
-    },
-    {
       name: "menu",
       description: "メニューを表示します",
     },
@@ -69,9 +67,16 @@ client.on("ready", async () => {
     },
   ];
   await client.application.commands.set(data);
-  //
 });
 
+ const commands = [ping,]
+ const rest = new REST({ version: '10' }).setToken(process.env.token)
+ async function main(){
+ 	await rest.put(
+			Routes.applicationCommands("BOTのユーザーIDをコピーして貼り付ける"),
+			{ body: commands }
+		)
+ }
 //commands
 
 client.on("interactionCreate", async (i) => {
@@ -93,7 +98,7 @@ client.on("interactionCreate", async (i) => {
     await i.reply({ embeds: [pollEmbed],});
   }
   //poll command 2
-  if (i.commandName === "poll") {
+  /*if (i.commandName === "poll") {
 
       data: new SlashCommandBuilder()
           .setName("poll")
@@ -126,7 +131,7 @@ client.on("interactionCreate", async (i) => {
               console.log(err);
           }
       
-  }
+  }*/
   //ping command
   if (i.commandName === "ping") {
     const e = new EmbedBuilder()
