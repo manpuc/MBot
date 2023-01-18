@@ -69,13 +69,16 @@ client.on("interactionCreate", async i => {
                     {name:'🟢 Green', value:'0 votes', inline:true},
                     {name:'🔵 Blue', value:'0 votes', inline:true},
                    );
-        await i.send({ embeds: [pollEmbed],then: [
+        await i.send({ 
+          embeds: [pollEmbed],
+          then: [
           (async msg => {
             await msg.react('🔴');
             await msg.react('🟢');
             await msg.react('🔵');
-          })
-        ]})
+           })
+          ]
+        })
     }
       //ping command
     if (i.commandName === 'ping') {
