@@ -45,7 +45,7 @@ client.on("messageCreate", (message) => {
     ); //943457413367996466
   }
 });
-//ここまで
+
 
 client.on("ready", async () => {
   const data = [
@@ -70,27 +70,28 @@ client.on("ready", async () => {
   //
 });
 
-//コマンドの内容
 //commands
 
 client.on("interactionCreate", async (i) => {
   if (!i.isCommand()) {
     return;
   }
-  //poll
+  //poll command
   if (i.commandName === "poll") {
     const pollEmbed = new EmbedBuilder()
       .setColor("E841C4")
       .setTitle("Poll")
-      .setDescription("色を選べ")
+      .setDescription("好きな色は？")
       .setFooter("絵文字に反応して投票")
       .addField(
-        { name: "🔴 Red", value: "0 votes", inline: true },
-        { name: "🟢 Green", value: "0 votes", inline: true },
-        { name: "🔵 Blue", value: "0 votes", inline: true }
+        { name: "🔴 Red", value: "0 votes" },
+        { name: "🟢 Green", value: "0 votes" },
+        { name: "🔵 Blue", value: "0 votes" }
       );
-    await i.send({
-      embeds: [pollEmbed],
+    i.channel.send(pollEmbed).then(async (msg) => {
+      await msg.react("🔴");
+      await msg.react("🟢");
+      await msg.react("🔵");
     });
   }
   //ping command
@@ -105,9 +106,9 @@ client.on("interactionCreate", async (i) => {
   if (i.commandName === "hello") {
     await i.reply(`${userMention(i.user.id)}ごきげんよう`);
   }
+  //menu command
   if (i.commandName === "menu") {
     new EmbedBuilder().setColor("E841C4");
-    //.setTitle('MBot めにゅ～')
     await i.reply({
       embeds: [
         {
