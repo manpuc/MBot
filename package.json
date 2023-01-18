@@ -2,7 +2,7 @@
   "name": "Discord-js-v14-template-for-glitch",
   "version": "14",
   "description": "It is Discord.js v14 template.",
-  "main": "server.js",
+  "main": "node server.js",
   "scripts": {
     "start": "node server.js"
   },

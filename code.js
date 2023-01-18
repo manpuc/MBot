@@ -1,6 +1,10 @@
-const { Discord , Client, GatewayIntentBits , EmbedBuilder , userMention , MessageEmbed, Message , ColorResolvable , SlashCommandBuilder , PermissionFlagsBits , ChannelType ,MessageButton} = require("discord.js");
-
-const on_message = require('./Commands/poll.js')
+const { Discord , Client,
+       GatewayIntentBits,
+       EmbedBuilder,
+       userMention,
+       MessageEmbed,
+       Message,
+       ColorResolvable , SlashCommandBuilder , PermissionFlagsBits , ChannelType ,MessageButton} = require("discord.js");
 
 const client = new Client({
   intents: [
