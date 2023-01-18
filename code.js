@@ -1,7 +1,5 @@
 const { Discord , Client, GatewayIntentBits , EmbedBuilder , userMention , MessageEmbed, Message , ColorResolvable , SlashCommandBuilder , PermissionFlagsBits , ChannelType } = require("discord.js");
 
-const { poll } = require('discord.js-poll');
-
 const on_message = require('./Commands/poll.js')
 
 const client = new Client({
@@ -26,16 +24,9 @@ client.on('messageCreate', message => {
       const userId = message.author.id; 
       client.users.send( userId , `<@${userId}>さんこんにちは　MBotはサポートが終了しました\nセキュリティーに問題があるので今すぐMBotを削除してください`)//943457413367996466
     }
-});//消えてるしｗｗｗ
+});
     //ここまで
-module.exports = {
-	name: 'poll',
-	description: 'Create a poll',
-	usage: 'Title + Option 1 + Option 2 + Option 3 + etc',
-	execute(client, message, args) {
-		poll(message, args, '+', '#00D1CD');
-	},
-};
+
 client.on("ready", async () => {
     const data = [
       {
@@ -53,6 +44,7 @@ client.on("ready", async () => {
       {
         name: 'poll',
         description: '簡易投票(β)',
+        footer:'対応する絵文字に反応して投票します。',
       },
     ];
     await client.application.commands.set(data);
@@ -61,9 +53,26 @@ client.on("ready", async () => {
 
 //コマンドの内容
 //commands
+
 client.on("interactionCreate", async i => {
     if (!i.isCommand()) {
         return;
+    }
+      //poll
+    if (i.commandName === 'poll') {
+        const pollEmbed = new Discord.MessageEmbed()
+          .setTitle('Poll')
+          .setDescription('What is your favorite color?')
+          .setFooter('React with the corresponding emoji to vote.')
+          .addField('🔴 Red', '0 votes', true)
+          .addField('🟢 Green', '0 votes', true)
+          .addField('🔵 Blue', '0 votes', true)
+        await   i.channel.send(pollEmbed)
+          .then(async msg => {
+            await msg.react('🔴');
+            await msg.react('🟢');
+            await msg.react('🔵');
+          });
     }
       //ping command
     if (i.commandName === 'ping') {
