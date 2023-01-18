@@ -34,23 +34,11 @@ client.on("ready", async () => {
   //  ↑草　ｗｗｗｗｗｗｗｗｗ
   console.log("MBotOnline");
 });
-//sample (ネタコマンド　いつかけします。)
-//公開時に削除
-client.on("messageCreate", (message) => {
-  if (message.author.bot) return;
-  if (message.content == "くぁｗせｄｒｆｔｇｙふじこｌｐ") {
-    message.channel.send(`${userMention(message.author.id)}とりま落ち着け。`);
-    const userId = message.author.id;
-    client.users.send(
-      userId,
-      `<@${userId}>さんこんにちは　MBotはサポートが終了しました\nセキュリティーに問題があるので今すぐMBotを削除してください`
-    ); //943457413367996466
-  }
-});
-
-
-client.on("ready", async () => {
+/*client.on("ready", async () => {
   const data = [
+    {
+      name: ""
+    }
     {
       name: "menu",
       description: "メニューを表示します",
@@ -67,16 +55,20 @@ client.on("ready", async () => {
     },
   ];
   await client.application.commands.set(data);
-});
-
- const commands = [ping,]
- const rest = new REST({ version: '10' }).setToken(process.env.token)
- async function main(){
- 	await rest.put(
-			Routes.applicationCommands("BOTのユーザーIDをコピーして貼り付ける"),
-			{ body: commands }
-		)
- }
+});*/
+const ping = new SlashCommandBuilder()
+  .setName("ping")
+  .setDescription("現在のpingを測定します");
+const menu = new SlashCommandBuilder()
+  .setName("menu")
+  .setDescription("現在のpingを測定します");
+const commands = [ping ,menu ,hello ,poll];
+const rest = new REST({ version: "10" }).setToken(process.env.token);
+async function main() {
+  await rest.put(Routes.applicationCommands("1040561874279870484"), {
+    body: commands,
+  });
+}
 //commands
 
 client.on("interactionCreate", async (i) => {
@@ -89,13 +81,13 @@ client.on("interactionCreate", async (i) => {
       .setColor("E841C4")
       .setTitle("Poll")
       .setDescription("好きな色は？")
-      .setFooter({text:"絵文字に反応して投票",})
+      .setFooter({ text: "絵文字に反応して投票" })
       .addFields(
-        { name: "🔴 Red", value: "0 votes" ,inline: true },
-        { name: "🟢 Green", value: "0 votes" ,inline: true },
-        { name: "🔵 Blue", value: "0 votes" ,inline: true }
+        { name: "🔴 Red", value: "0 votes", inline: true },
+        { name: "🟢 Green", value: "0 votes", inline: true },
+        { name: "🔵 Blue", value: "0 votes", inline: true }
       );
-    await i.reply({ embeds: [pollEmbed],});
+    await i.reply({ embeds: [pollEmbed] });
   }
   //poll command 2
   /*if (i.commandName === "poll") {
@@ -167,6 +159,18 @@ client.on("interactionCreate", async (i) => {
       ],
       ephemeral: true,
     });
+  }
+});
+//sample (ネタコマンド　いつかけします。)
+client.on("messageCreate", (message) => {
+  if (message.author.bot) return;
+  if (message.content == "くぁｗせｄｒｆｔｇｙふじこｌｐ") {
+    message.channel.send(`${userMention(message.author.id)}とりま落ち着け。`);
+    const userId = message.author.id;
+    client.users.send(
+      userId,
+      `<@${userId}>さんこんにちは　MBotはサポートが終了しました\nセキュリティーに問題があるので今すぐMBotを削除してください`
+    ); //943457413367996466
   }
 });
 
