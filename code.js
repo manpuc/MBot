@@ -92,10 +92,10 @@ client.on("interactionCreate", async (i) => {
       .setTitle("Poll")
       .setDescription("好きな色は？")
       .setFooter({text:"絵文字に反応して投票",})
-      .addField(
-        { name: "🔴 Red", value: "0 votes" },
-        { name: "🟢 Green", value: "0 votes" },
-        { name: "🔵 Blue", value: "0 votes" }
+      .addFields(
+        { name: "🔴 Red", value: "0 votes" ,inline: true },
+        { name: "🟢 Green", value: "0 votes" ,inline: true },
+        { name: "🔵 Blue", value: "0 votes" ,inline: true }
       );
     await i.reply({ embeds: [pollEmbed],})
       /*.then(async (msg) => {
