@@ -21,9 +21,10 @@ const client = new Client({
     GatewayIntentBits.MessageContent,
   ],
 });
-client.on("guildCreate", async ())
+client.on("guildCreate", async () => {
+  console.log("MBotOnline");
+});
 client.on("ready", async () => {
-  //完全不潔のMBot
   client.user.setPresence({
     activities: [{ name: "MBotのここがすごい！　　　　　　　" }],
     status: "online",
