@@ -35,3 +35,22 @@ module.exports = {
         }
     }
 }
+
+  /*if (i.commandName === "poll") {
+    const pollEmbed = new EmbedBuilder()
+      .setColor("E841C4")
+      .setTitle("Poll")
+      .setDescription("好きな色は？")
+      .setFooter({text:"絵文字に反応して投票",})
+      .addFields(
+        { name: "🔴 Red", value: "0 votes" ,inline: true },
+        { name: "🟢 Green", value: "0 votes" ,inline: true },
+        { name: "🔵 Blue", value: "0 votes" ,inline: true }
+      );
+    await i.reply({ embeds: [pollEmbed],});
+      .then(async (msg) => {
+      await msg.react("🔴");
+      await msg.react("🟢");
+      await msg.react("🔵");
+    });
+  }*/
