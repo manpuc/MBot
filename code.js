@@ -1,4 +1,4 @@
-const { Discord , Client, GatewayIntentBits , EmbedBuilder , userMention , MessageEmbed, Message , ColorResolvable , SlashCommandBuilder , PermissionFlagsBits , ChannelType } = require("discord.js");
+const { Discord , Client, GatewayIntentBits , EmbedBuilder , userMention , MessageEmbed, Message , ColorResolvable , SlashCommandBuilder , PermissionFlagsBits , ChannelType ,MessageButton} = require("discord.js");
 
 const on_message = require('./Commands/poll.js')
 
@@ -59,14 +59,16 @@ client.on("interactionCreate", async i => {
     }
       //poll
     if (i.commandName === 'poll') {
-        const pollEmbed = new MessageEmbed()
+        const pollEmbed = new EmbedBuilder()
           .setTitle('Poll')
           .setDescription('色を選べ')
           .setFooter('React with the corresponding emoji to vote.')
-          .addField({name:'🔴 Red', value:'0 votes', inline:true})
-          .addField({name:'🟢 Green', value:'0 votes', inline:true})
-          .addField({name:'🔵 Blue', value:'0 votes', inline:true})
-        await i.reply({ embeds: [pollEmbed], ephemeral: false})
+          .addField(
+                    {name:'🔴 Red', value:'0 votes', inline:true},
+                    {name:'🟢 Green', value:'0 votes', inline:true},
+                    {name:'🔵 Blue', value:'0 votes', inline:true},
+                   );
+        await i.send({ embeds: [pollEmbed]})
           .then(async msg => {
             await msg.react('🔴');
             await msg.react('🟢');
