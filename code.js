@@ -79,20 +79,30 @@ client.on("interactionCreate", async (i) => {
   //poll command
   if (i.commandName === "poll") {
     const pollEmbed = new EmbedBuilder()
+      /*.setColor("E841C4")
+      .setTitle("Poll")
+      .setDescription("好きな色は？")
+      .setFooter({text:"絵文字に反応して投票",})
+      .addField(
+        { name: "🔴 Red", value: "0 votes" },
+        { name: "🟢 Green", value: "0 votes" },
+        { name: "🔵 Blue", value: "0 votes" }
+      );*/
       .setColor("E841C4")
       .setTitle("Poll")
       .setDescription("好きな色は？")
-      .setFooter("絵文字に反応して投票")
+      .setFooter({text:"絵文字に反応して投票",})
       .addField(
         { name: "🔴 Red", value: "0 votes" },
         { name: "🟢 Green", value: "0 votes" },
         { name: "🔵 Blue", value: "0 votes" }
       );
-    i.channel.send(pollEmbed).then(async (msg) => {
+    await i.reply({ embeds: [pollEmbed],})
+      /*.then(async (msg) => {
       await msg.react("🔴");
       await msg.react("🟢");
       await msg.react("🔵");
-    });
+    });*/
   }
   //ping command
   if (i.commandName === "ping") {
