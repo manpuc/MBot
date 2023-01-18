@@ -60,20 +60,22 @@ client.on("interactionCreate", async i => {
       //poll
     if (i.commandName === 'poll') {
         const pollEmbed = new EmbedBuilder()
+          .setColor('E841C4')
           .setTitle('Poll')
           .setDescription('色を選べ')
-          .setFooter('React with the corresponding emoji to vote.')
+          .setFooter('絵文字に反応して投票')
           .addField(
                     {name:'🔴 Red', value:'0 votes', inline:true},
                     {name:'🟢 Green', value:'0 votes', inline:true},
                     {name:'🔵 Blue', value:'0 votes', inline:true},
                    );
-        await i.send({ embeds: [pollEmbed]})
-          .then(async msg => {
+        await i.send({ embeds: [pollEmbed],then: [
+          (async msg => {
             await msg.react('🔴');
             await msg.react('🟢');
             await msg.react('🔵');
-          });
+          })
+        ]})
     }
       //ping command
     if (i.commandName === 'ping') {
