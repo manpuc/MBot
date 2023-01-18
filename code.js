@@ -107,7 +107,7 @@ client.on("interactionCreate", async (i) => {
     const channel = options.getChannel("channel");
     const description = options.getString("description");
     const embed = new EmbedBuilder()
-      .setColor("Gold")
+      .setColor("E841C4")
       .setDescription(description)
       .setTimestamp();
     try {
@@ -132,30 +132,11 @@ client.on("interactionCreate", async (i) => {
     await i.reply(`${userMention(i.user.id)}ごきげんよう`);
   }
   //menu command
-  if (i.commandName === "menu") {
-    new EmbedBuilder().setColor("E841C4");
-    await i.reply({
-      embeds: [
-        {
-          title: "MBot めにゅ～",
-          /*url: 'いつか追加する',*/
-          fields: [
-            { name: "/ping", value: "現在のPingを計測します。" },
-            {
-              name: "/hello",
-              value:
-                "あいさつを返してくれます。ぼっちのあなたにも優しいbotです。",
-            },
-            { name: "/poll", value: "夢物語。おそらくもう開発しない" },
-          ],
-          color: 15221188,
-          timestamp: new Date(),
-        },
-      ],
-      ephemeral: true,
-    });
-  }
-});
+  if (i.content.startsWith('/menu')) {
+      // command1.jsをrequireして実行
+      require('commands/menu.js')(client, i);
+    }
+  });
 //sample (ネタコマンド　いつかけします。)
 client.on("messageCreate", (message) => {
   if (message.author.bot) return;
