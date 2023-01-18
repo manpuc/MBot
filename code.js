@@ -37,7 +37,8 @@ client.on("ready", async () => {
 /*client.on("ready", async () => {
   const data = [
     {
-      name: ""
+      name: "ping"
+      description: "現在のpingを測定します"
     }
     {
       name: "menu",
@@ -49,9 +50,7 @@ client.on("ready", async () => {
     },
     {
       name: "poll",
-      description: "簡易投票('⭕'or'❌')",
-      DefaultMemberPermissions:PermissionFlagsBits.Administrator,
-      
+      description: "簡易投票('⭕'or'❌')",      
     },
   ];
   await client.application.commands.set(data);
@@ -61,8 +60,21 @@ const ping = new SlashCommandBuilder()
   .setDescription("現在のpingを測定します");
 const menu = new SlashCommandBuilder()
   .setName("menu")
-  .setDescription("現在のpingを測定します");
-const commands = [ping ,menu ,hello ,poll];
+  .setDescription("メニューを表示します");
+const hello = new SlashCommandBuilder()
+  .setName("hello")
+  .setDescription("あいさつ返す");
+const poll = new SlashCommandBuilder()
+  .setName("poll")
+  .setDescription("簡易投票('⭕'or'❌')")
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+  .addStringOption((option) =>
+    option.setName("description").setDescription("なんの").setRequired(true)
+  )
+  .addChannelOption((option) =>
+    option.setName("channel").setDescription("どこで").setRequired(true)
+  );
+const commands = [ping, menu, hello, poll];
 const rest = new REST({ version: "10" }).setToken(process.env.token);
 async function main() {
   await rest.put(Routes.applicationCommands("1040561874279870484"), {
@@ -76,7 +88,7 @@ client.on("interactionCreate", async (i) => {
     return;
   }
   //poll command
-  if (i.commandName === "poll") {
+  /*if (i.commandName === "poll") {
     const pollEmbed = new EmbedBuilder()
       .setColor("E841C4")
       .setTitle("Poll")
@@ -88,42 +100,25 @@ client.on("interactionCreate", async (i) => {
         { name: "🔵 Blue", value: "0 votes", inline: true }
       );
     await i.reply({ embeds: [pollEmbed] });
-  }
-  //poll command 2
-  /*if (i.commandName === "poll") {
-
-      data: new SlashCommandBuilder()
-          .setName("poll")
-          .setDescription("簡易投票('⭕'or'❌')")
-          .setDefaultMemberPermissions (PermissionFlagsBits.Administrator)
-          .addStringOption (option =>
-              option.setName("description")
-                  .setDescription("なんの")
-                  .setRequired(true)
-          )
-          .addChannelOption (option =>
-              option.setName("channel") 
-                  .setDescription("どこで")
-                  .setRequired(true)
-          ),
-          const { options } = i;
-
-          const channel = options.getChannel("channel");
-          const description = options.getString("description");
-          const embed = new EmbedBuilder()
-              .setColor("Gold")
-              .setDescription(description)
-              .setTimestamp();
-          try {
-              const m = await channel.send({ embeds: [embed] });
-              await m.react("⭕");
-              await m.react("❌");
-              await i.reply({ content: "問題なく動作", ephemeral: true });
-          } catch (err) {
-              console.log(err);
-          }
-      
   }*/
+  //poll command 2
+  if (i.commandName === "poll") {
+    const { options } = i;
+    const channel = options.getChannel("channel");
+    const description = options.getString("description");
+    const embed = new EmbedBuilder()
+      .setColor("Gold")
+      .setDescription(description)
+      .setTimestamp();
+    try {
+      const m = await channel.send({ embeds: [embed] });
+      await m.react("⭕");
+      await m.react("❌");
+      await i.reply({ content: "問題なく動作", ephemeral: true });
+    } catch (err) {
+      console.log(err);
+    }
+  }
   //ping command
   if (i.commandName === "ping") {
     const e = new EmbedBuilder()
