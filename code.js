@@ -44,7 +44,6 @@ client.on("ready", async () => {
       {
         name: 'poll',
         description: '簡易投票(β)',
-        footer:'対応する絵文字に反応して投票します。',
       },
     ];
     await client.application.commands.set(data);
@@ -64,9 +63,9 @@ client.on("interactionCreate", async i => {
           .setTitle('Poll')
           .setDescription('色を選べ')
           .setFooter('React with the corresponding emoji to vote.')
-          .addField('🔴 Red', '0 votes', true)
-          .addField('🟢 Green', '0 votes', true)
-          .addField('🔵 Blue', '0 votes', true)
+          .addField({name:'🔴 Red', value:'0 votes', inline:true})
+          .addField({name:'🟢 Green', value:'0 votes', inline:true})
+          .addField({name:'🔵 Blue', value:'0 votes', inline:true})
         await i.reply({ embeds: [pollEmbed], ephemeral: false})
           .then(async msg => {
             await msg.react('🔴');
