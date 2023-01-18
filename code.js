@@ -60,14 +60,14 @@ client.on("interactionCreate", async i => {
     }
       //poll
     if (i.commandName === 'poll') {
-        const pollEmbed = new Discord.MessageEmbed()
+        const pollEmbed = new MessageEmbed()
           .setTitle('Poll')
-          .setDescription('What is your favorite color?')
+          .setDescription('色を選べ')
           .setFooter('React with the corresponding emoji to vote.')
           .addField('🔴 Red', '0 votes', true)
           .addField('🟢 Green', '0 votes', true)
           .addField('🔵 Blue', '0 votes', true)
-        await   i.channel.send(pollEmbed)
+        await i.reply({ embeds: [pollEmbed], ephemeral: false})
           .then(async msg => {
             await msg.react('🔴');
             await msg.react('🟢');
