@@ -79,8 +79,9 @@ const rest = new REST({ version: "10" }).setToken(process.env.token);
 async function main() {
   await rest.put(Routes.applicationCommands("1040561874279870484"), {
     body: commands,
-  });
+  })
 }
+main().catch(err => console.log(err))
 //commands
 
 client.on("interactionCreate", async (i) => {
@@ -132,11 +133,30 @@ client.on("interactionCreate", async (i) => {
     await i.reply(`${userMention(i.user.id)}ごきげんよう`);
   }
   //menu command
-  if (i.content.startsWith('/menu')) {
-      // command1.jsをrequireして実行
-      require('commands/menu.js')(client, i);
-    }
-  });
+  if (i.commandName === "menu") {
+    new EmbedBuilder().setColor("E841C4");
+    await i.reply({
+      embeds: [
+        {
+          title: "MBot めにゅ～",
+          /*url: 'いつか追加する',*/
+          fields: [
+            { name: "/ping", value: "現在のPingを計測します。" },
+            {
+              name: "/hello",
+              value:
+                "あいさつを返してくれます。ぼっちのあなたにも優しいbotです。",
+            },
+            { name: "/poll", value: "夢物語。おそらくもう開発しない" },
+          ],
+          color: 15221188,
+          timestamp: new Date(),
+        },
+      ],
+      ephemeral: true,
+    });
+  }
+});
 //sample (ネタコマンド　いつかけします。)
 client.on("messageCreate", (message) => {
   if (message.author.bot) return;
