@@ -15,6 +15,8 @@ const {
   MessageButton,
 } = require("discord.js");
 
+const translator = require('@vitalets/google-translate-api');
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -55,6 +57,9 @@ client.on("ready", async () => {
   ];
   await client.application.commands.set(data);
 });*/
+const ping = new SlashCommandBuilder()
+  .setName("ping")
+  .setDescription("現在のpingを測定します");
 const ping = new SlashCommandBuilder()
   .setName("ping")
   .setDescription("現在のpingを測定します");
