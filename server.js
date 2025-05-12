@@ -1,8 +1,6 @@
 const http = require("http");
 const querystring = require("node:querystring");
 
-//GASでwakeさせること。
-
 http
   .createServer(function(req, res) {
     if (req.method == "POST") {
@@ -26,14 +24,14 @@ http
       });
     } else if (req.method == "GET") {
       res.writeHead(200, { "Content-Type": "text/plain" });
-      res.end("Discord Bot is Oprateing!");
+      res.end("Discord Bot is Operating!");
     }
   })
-  .listen(3000);
+  .listen(process.env.PORT || 3000); // ← 修正ポイント
 
-if (process.env.DISCORD_BOT_TOKEN == undefined || process.env.DISCORD_BOT_TOKEN == "") {
+if (!process.env.DISCORD_BOT_TOKEN) {
   console.log("DISCORD_BOT_TOKENを設定してください。");
   process.exit(0);
 }
 
-require("./code.js")
+require("./code.js");

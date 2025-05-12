@@ -135,6 +135,6 @@ client.on("interactionCreate", async (interaction) => {
 });
 
 //おフラインにします 2024/08/01
-process.exit()
+//process.exit()
 
 client.login(process.env.DISCORD_BOT_TOKEN);
