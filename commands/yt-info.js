@@ -2,7 +2,7 @@ const { MessageActionRow, MessageButton, MessageEmbed } = require("discord.js");
 
 module.exports = {
   data: {
-    name: "youtube-video-info",
+    name: "yt-info",
     description: "YouTube動画の詳細情報を取得します",
     options: [
       {
