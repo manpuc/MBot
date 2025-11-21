@@ -1,35 +1,35 @@
 const { MessageEmbed } = require("discord.js");
 
 module.exports = {
-    data: {
-        name: "rolecount",
-        description: "ロールごとのメンバー数を集計します",
-    },
+  data: {
+    name: "rolecount",
+    description: "サーバー内のロールごとの人数を集計します",
+  },
+  async execute(interaction) {
+    try {
+      const roles = interaction.guild.roles.cache
+        .filter(r => r.name !== "@everyone")
+        .map(r => ({ name: r.name, count: r.members.size }))
+        .sort((a, b) => b.count - a.count); // 人数が多い順
 
-    async execute(interaction) {
-        try {
-        const guild = interaction.guild;
-        const roles = guild.roles.cache.sort((a, b) => b.position - a.position);
+      if (roles.length === 0) {
+        return interaction.reply({ content: "ロールが存在しません。", ephemeral: true });
+      }
 
-        const list = roles
-            .filter((r) => r.name !== "@everyone")
-            .map((r) => `• **${r.name}**：${r.members.size}人`)
-            .join("\n");
+      const embed = new MessageEmbed()
+        .setColor("#E841C4")
+        .setTitle("📊 ロール別人数集計")
+        .setDescription(
+          roles.map(r => `**${r.name}**: ${r.count} 人`).join("\n")
+        );
 
-        const embed = new MessageEmbed()
-            .setColor("E841C4")
-            .setTitle("🎭 ロール別メンバー数")
-            .setDescription(list || "ロールが見つかりませんでした。");
-
-        await interaction.reply({ embeds: [embed] });
-
+      await interaction.reply({ embeds: [embed], ephemeral: true });
     } catch (error) {
-        const errEmbed = new MessageEmbed()
-            .setColor("FF0000")
-            .setTitle("エラー発生")
-            .setDescription("ロールの集計中にエラーが発生しました。");
-
-        await interaction.reply({ embeds: [errEmbed], ephemeral: true });
+      const embed = new MessageEmbed()
+        .setColor("#FF0000")
+        .setTitle("エラー")
+        .setDescription(`集計中にエラーが発生しました。\n\`${error.message}\``);
+      await interaction.reply({ embeds: [embed], ephemeral: true });
     }
-    },
+  },
 };
