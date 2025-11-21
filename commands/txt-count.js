@@ -1,5 +1,4 @@
 const { MessageEmbed } = require("discord.js");
-const fetch = require("node-fetch");
 
 module.exports = {
   data: {
@@ -15,7 +14,7 @@ module.exports = {
       {
         name: "file",
         type: "ATTACHMENT",
-        description: "テキストファイル（.txt）を添付してください",
+        description: "テキストファイルを添付してください",
         required: false,
       },
     ],
@@ -23,34 +22,29 @@ module.exports = {
 
   async execute(interaction) {
     try {
-      // 返信猶予
       await interaction.deferReply({ ephemeral: true });
 
       const inputText = interaction.options.getString("text");
       const inputFile = interaction.options.getAttachment("file");
       let content = "";
 
-      // テキストが直接入力されている
       if (inputText) {
         content = inputText;
-
-      // ファイルが添付された
       } else if (inputFile) {
         if (!inputFile.name.endsWith(".txt")) {
           const embed = new MessageEmbed()
-            .setColor("FF0000") // ← エラーは赤
+            .setColor("#E841C4")
             .setTitle("エラー")
             .setDescription("テキストファイル（.txt）のみ対応しています。");
           return interaction.editReply({ embeds: [embed] });
         }
 
-        // ファイルを取得
+        // ★標準fetch
         const response = await fetch(inputFile.url);
         content = await response.text();
-
       } else {
         const embed = new MessageEmbed()
-          .setColor("FF0000") // ← エラーは赤
+          .setColor("#E841C4")
           .setTitle("エラー")
           .setDescription("文字列かテキストファイルを入力してください。");
         return interaction.editReply({ embeds: [embed] });
@@ -59,17 +53,15 @@ module.exports = {
       const charCount = content.length;
 
       const embed = new MessageEmbed()
-        .setColor("E841C4")
+        .setColor("#E841C4")
         .setTitle("文字数カウント結果")
         .setDescription(`入力された内容の文字数は **${charCount}** 文字です。`);
 
       await interaction.editReply({ embeds: [embed] });
-
     } catch (error) {
       console.error("countコマンドでエラー:", error);
-
       const embed = new MessageEmbed()
-        .setColor("FF0000") // エラーは赤
+        .setColor("#FF0000")
         .setTitle("エラー発生")
         .setDescription("文字数カウント中にエラーが発生しました。");
 
