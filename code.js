@@ -101,38 +101,42 @@ client.on("ready", async () => {
 });
 
 client.on("interactionCreate", async (interaction) => {
-  if (!interaction.isCommand()) {
-    return;
-  }
+  if (!interaction.isCommand()) return;
 
-  // コマンドごとの処理をここに追加します
   const commandName = interaction.commandName;
-  const commandFile = commandFiles.find((file) => file.startsWith(commandName));
 
-  if (commandFile) {
-    const command = require(path.join(commandsFolder, commandFile));
-
-    // 追加: 権限チェック
-    const restrictedCommands = ["muteall", "unmuteall", "unmuteall-timer", "set-report-channel", "remove-report-channel"];
-    if (restrictedCommands.includes(commandName)) {
-      // 管理者権限を持っているかをチェックする
-      if (!interaction.member.permissions.has("ADMINISTRATOR")) {
-        // メンバーが管理者権限を持っていない場合
-        const ErrEmbed = new MessageEmbed()
-          .setColor(15221188)
-          .setTitle("えろー")
-          .setDescription("このコマンドを使用する権限がありません。");
-        await interaction.reply({ embeds: [ErrEmbed] });
-        return;
-      }
+  // 修正：ファイル名ではなく command.data.name で一致させる
+  let command;
+  for (const file of commandFiles) {
+    const cmd = require(path.join(commandsFolder, file));
+    if (cmd.data && cmd.data.name === commandName) {
+      command = cmd;
+      break;
     }
-
-    command.execute(interaction);
-  } else {
-    console.error(`Unknown command: ${commandName}`);
-    await interaction.reply("未知のコマンドです。");
   }
+
+  if (!command) {
+    console.error(`Unknown command: ${commandName}`);
+    return await interaction.reply("未知のコマンドです。");
+  }
+
+  // 権限チェック（既存のまま）
+  const restrictedCommands = ["muteall", "unmuteall", "unmuteall-timer", "set-report-channel", "remove-report-channel"];
+  if (restrictedCommands.includes(commandName)) {
+    if (!interaction.member.permissions.has("ADMINISTRATOR")) {
+      const ErrEmbed = new MessageEmbed()
+        .setColor(15221188)
+        .setTitle("えろー")
+        .setDescription("このコマンドを使用する権限がありません。");
+      await interaction.reply({ embeds: [ErrEmbed] });
+      return;
+    }
+  }
+
+  // コマンド実行
+  command.execute(interaction);
 });
+
 
 //おフラインにします
 //process.exit()
