@@ -23,13 +23,17 @@ const rest = new REST({ version: "10" }).setToken(
 );
 
 async function main() {
+  console.log("main() started");  // ← 追加
   try {
-    await rest.put(Routes.applicationCommands(process.env.DISCORD_BOT_CLIENT_ID), {
-      body: commands,
-    });
+    await rest.put(
+      Routes.applicationCommands(process.env.DISCORD_BOT_CLIENT_ID),
+      {
+        body: commands,
+      }
+    );
     console.log("Successfully registered application commands.");
   } catch (error) {
-    console.error(error);
+    console.error("Error registering commands:", error);
   }
 }
 
