@@ -16,7 +16,7 @@
     "googleapis": "^166.0.0",
     "node-fetch": "^3.3.2",
     "random-cat-img": "^1.1.8",
-    "uuid": "^13.0.0",
+    "uuid": "^9.0.1",
     "whois": "^2.15.0",
     "whois-json": "^2.0.4"
   },
