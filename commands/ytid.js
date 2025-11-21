@@ -2,12 +2,12 @@ const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   data: {
-    name: "ytid", // ← ここ修正。ファイル名と一致
+    name: "ytid",
     description: "YouTube URLから動画IDを抽出し短縮URLに変換します",
     options: [
       {
         name: "url",
-        type: "STRING",
+        type: 3, // STRING
         description: "YouTube URL（例: https://www.youtube.com/watch?v=XXXXXXXXXXX）",
         required: true,
       },
@@ -17,7 +17,6 @@ module.exports = {
   async execute(interaction) {
     const url = interaction.options.getString("url");
 
-    // YouTube動画IDを抽出
     const match = url.match(/v=([a-zA-Z0-9_-]{11})/);
     if (!match) {
       const errEmbed = new MessageEmbed()
@@ -35,7 +34,7 @@ module.exports = {
       .setTitle("🎥 YouTube URL 変換結果")
       .addField("新しい形式", `[${url}](${url})`)
       .addField("短縮リンク", `[${oldUrl}](${oldUrl})`)
-      .setColor("E841C4"); // ← 先輩のテーマカラー
+      .setColor("E841C4");
 
     await interaction.reply({ embeds: [embed] });
   },

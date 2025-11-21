@@ -8,13 +8,13 @@ module.exports = {
     options: [
       {
         name: "text",
-        type: "STRING",
+        type: 3, // STRING
         description: "カウントする文字列を入力してください",
         required: false,
       },
       {
         name: "file",
-        type: "ATTACHMENT",
+        type: 11, // ATTACHMENT
         description: "テキストファイルを添付してください",
         required: false,
       },
@@ -33,16 +33,14 @@ module.exports = {
         content = inputText;
 
       } else if (inputFile) {
-        // .txt 以外を弾く
         if (!inputFile.name.endsWith(".txt")) {
           const embed = new MessageEmbed()
-            .setColor("#FF0000") // エラーは赤
+            .setColor("#FF0000")
             .setTitle("エラー")
             .setDescription("テキストファイル（.txt）のみ対応しています。");
           return interaction.editReply({ embeds: [embed] });
         }
 
-        // ★ axiosで取得
         const res = await axios.get(inputFile.url);
         content = res.data;
 
@@ -57,7 +55,7 @@ module.exports = {
       const charCount = content.length;
 
       const embed = new MessageEmbed()
-        .setColor("#E841C4") // 通常カラー
+        .setColor("#E841C4")
         .setTitle("文字数カウント結果")
         .setDescription(`入力された内容の文字数は **${charCount}** 文字です。`);
 
