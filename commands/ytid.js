@@ -4,12 +4,12 @@ const axios = require("axios");
 module.exports = {
   data: {
     name: "ytid",
-    description: "YouTube URLからチャンネルIDを取得します",
+    description: "YouTube チャンネルURLからチャンネルIDと情報を取得します",
     options: [
       {
         name: "url",
         type: 3,
-        description: "YouTube URL（例: https://www.youtube.com/watch?v=XXXXXXXXXXX）",
+        description: "YouTube チャンネルURL（https://www.youtube.com/@xxxx）",
         required: true,
       },
     ],
@@ -18,85 +18,68 @@ module.exports = {
   async execute(interaction) {
     const url = interaction.options.getString("url");
 
-    // YouTube URLのチェック
-    const videoIdMatch = url.match(/v=([a-zA-Z0-9_-]{11})/);
-    if (!videoIdMatch) {
+    // @形式 or /c/ or /channel/ 以外を弾く
+    if (!url.includes("youtube.com")) {
       const errEmbed = new MessageEmbed()
         .setColor("FF0000")
         .setTitle("エラー")
-        .setDescription("有効な YouTube URL を入力してください。\n例: https://www.youtube.com/watch?v=XXXXXXXXXXX");
+        .setDescription("有効な YouTube のチャンネルURL を入力してください。");
 
       return await interaction.reply({ embeds: [errEmbed], ephemeral: true });
     }
 
     try {
-      // ---- HTML取得（axios） ----
-      const response = await axios.get(url, {
+      // ---- HTML 取得 ----
+      const res = await axios.get(url, {
         headers: {
           "User-Agent": "Mozilla/5.0",
           "Accept-Language": "ja-JP",
-        }
+        },
       });
 
-      const html = response.data;
+      const html = res.data;
 
-      // ---- JSON抽出（ytInitialData / ytInitialPlayerResponse）----
-      let jsonStr = null;
-
-      const regex1 = /var ytInitialPlayerResponse = ({.*?});/s;
-      const regex2 = /var ytInitialData = ({.*?});/s;
-
-      const found =
-        html.match(regex1) ||
-        html.match(regex2);
+      // ---- ytInitialData 抽出 ----
+      const regex = /var ytInitialData = ({.*?});<\/script>/s;
+      const found = html.match(regex);
 
       if (!found) {
         const errEmbed = new MessageEmbed()
           .setColor("FF0000")
           .setTitle("抽出失敗")
-          .setDescription("YouTubeページ解析に失敗しました。YouTube側の仕様変更の可能性があります。");
+          .setDescription("YouTube のデータ解析に失敗しました。仕様変更の可能性があります。");
 
-        return interaction.reply({ embeds: [errEmbed], ephemeral: true });
+        return await interaction.reply({ embeds: [errEmbed], ephemeral: true });
       }
 
-      jsonStr = found[1];
+      const jsonStr = found[1];
+      const data = JSON.parse(jsonStr);
 
-      let data;
-      try {
-        data = JSON.parse(jsonStr);
-      } catch (e) {
+      // ---- チャンネルID と キーワード 抽出 ----
+      const meta = data.metadata?.channelMetadataRenderer;
+
+      if (!meta) {
         const errEmbed = new MessageEmbed()
           .setColor("FF0000")
-          .setTitle("JSONエラー")
-          .setDescription("YouTubeの埋め込みデータをパースできませんでした。");
+          .setTitle("取得エラー")
+          .setDescription("チャンネル情報を取得できませんでした。");
 
-        return interaction.reply({ embeds: [errEmbed], ephemeral: true });
+        return await interaction.reply({ embeds: [errEmbed], ephemeral: true });
       }
 
-      // ---- チャンネルID 抽出 ----
-      let channelId = null;
+      const channelId = meta.externalId;
+      const keywords = meta.keywords || "キーワード情報なし";
 
-      if (data?.videoDetails?.channelId) {
-        channelId = data.videoDetails.channelId;
-      } else if (data?.metadata?.channelMetadataRenderer?.externalId) {
-        channelId = data.metadata.channelMetadataRenderer.externalId;
-      }
-
-      if (!channelId) {
-        const errEmbed = new MessageEmbed()
-          .setColor("FF0000")
-          .setTitle("取得不可")
-          .setDescription("チャンネルIDを取得できませんでした。");
-
-        return interaction.reply({ embeds: [errEmbed], ephemeral: true });
-      }
+      const channelUrl = `https://www.youtube.com/channel/${channelId}`;
 
       // ---- 成功表示 ----
       const embed = new MessageEmbed()
-        .setTitle("📺 チャンネルID取得")
-        .addField("URL", url)
+        .setColor("E841C4")
+        .setTitle("📺 チャンネル情報取得")
+        .addField("入力URL", url)
         .addField("チャンネルID", `\`${channelId}\``)
-        .setColor("E841C4");
+        .addField("チャンネルURL", `[${channelUrl}](${channelUrl})`)
+        .addField("キーワード", keywords);
 
       await interaction.reply({ embeds: [embed] });
 
@@ -106,7 +89,7 @@ module.exports = {
       const errEmbed = new MessageEmbed()
         .setColor("FF0000")
         .setTitle("通信エラー")
-        .setDescription("YouTubeページの取得中にエラーが発生しました。");
+        .setDescription("YouTube ページの取得中にエラーが発生しました。");
 
       await interaction.reply({ embeds: [errEmbed], ephemeral: true });
     }
