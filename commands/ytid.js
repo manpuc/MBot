@@ -68,7 +68,6 @@ module.exports = {
       }
 
       const channelId = meta.externalId;
-      const keywords = meta.keywords || "キーワード情報なし";
 
       const channelUrl = `https://www.youtube.com/channel/${channelId}`;
 
@@ -77,9 +76,7 @@ module.exports = {
         .setColor("E841C4")
         .setTitle("📺 チャンネル情報取得")
         .addField("入力URL", url)
-        .addField("チャンネルID", `\`${channelId}\``)
-        .addField("チャンネルURL", `[${channelUrl}](${channelUrl})`)
-        .addField("キーワード", keywords);
+        .addField("チャンネルURL",channelUrl)
 
       await interaction.reply({ embeds: [embed] });
 
