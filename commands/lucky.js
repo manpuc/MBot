@@ -1,4 +1,3 @@
-// commands/lucky.js
 const {
     SlashCommandBuilder,
     ActionRowBuilder,
@@ -18,15 +17,14 @@ module.exports = {
         let round = 1;
         let isGameOver = false;
 
+        // 初回表示
         await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setColor("Random")
-                    .setTitle("🎮 Lucky Game Start！")
+                    .setTitle("🎮 すたーと！")
                     .setDescription(
-                        `**Round 1 / 32**\n` +
-                        `成功確率：**50%**\n\n` +
-                        `⏱️ **10秒以内に 0 または 1 を選択してください**`
+                        `**Round 1 / 32**\n成功確率：**50%**\n\n⏱️ **10秒以内に 0 または 1 を選択してください**`
                     )
             ],
             components: generateButtons()
@@ -36,31 +34,11 @@ module.exports = {
             time: 1000 * 60 * 5
         });
 
-        let roundTimeout = startRoundTimeout(interaction, round, () => {
-            isGameOver = true;
-
-            interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setColor(0xff0000)
-                        .setTitle("⌛ Time Up")
-                        .setDescription(
-                            `**10秒以内に選択がなかったため中断されました。**\n\n` +
-                            `**${round - 1} ラウンド成功！**`
-                        )
-                ],
-                components: []
-            });
-
-            collector.stop();
-        });
+        let roundTimeout = startRoundTimeout(interaction, round, () => endGameTimeout(interaction, round));
 
         collector.on("collect", async btn => {
             if (btn.user.id !== interaction.user.id) {
-                return btn.reply({
-                    content: "これはあなたのゲームではありません！",
-                    ephemeral: true
-                });
+                return btn.reply({ content: "これはあなたのゲームではありません！", ephemeral: true });
             }
 
             if (isGameOver) return;
@@ -69,6 +47,9 @@ module.exports = {
 
             const chosen = btn.customId;
             const hit = Math.random() < 0.5 ? "0" : "1";
+
+            const successRounds = round - 1;
+            const successRate = (1 / (2 ** successRounds)) * 100;
 
             // ❌ 外れ
             if (chosen !== hit) {
@@ -80,8 +61,9 @@ module.exports = {
                             .setColor(0xff0000)
                             .setTitle("❌ Game Over")
                             .setDescription(
-                                `**${round - 1} ラウンド成功！**\n` +
-                                `ざんねーん`
+                                `**${successRounds} ラウンド成功！**` +
+                                (successRounds > 0 ? `\nここまでの成功確率：**${formatPercent(successRate)}**` : "") +
+                                `\nざんねーん`
                             )
                     ],
                     components: []
@@ -94,7 +76,6 @@ module.exports = {
             // 🎉 完全制覇
             if (round >= 32) {
                 isGameOver = true;
-
                 await btn.update({
                     embeds: [
                         new EmbedBuilder()
@@ -102,6 +83,7 @@ module.exports = {
                             .setTitle("🎉 完全制覇！32ラウンドクリア！")
                             .setDescription(
                                 `**全32ラウンド成功！**\n` +
+                                `成功確率：**${formatPercent(successRate)}**\n` +
                                 `あなたは異常レベルの強運の持ち主です。`
                             )
                     ],
@@ -112,10 +94,9 @@ module.exports = {
                 return;
             }
 
-            // 🔁 進む
+            // 次のラウンド
             round++;
-
-            const successRate = ((1 / (2 ** (round - 1))) * 100);
+            const nextSuccessRate = (1 / (2 ** (round - 1))) * 100;
 
             await btn.update({
                 embeds: [
@@ -124,36 +105,38 @@ module.exports = {
                         .setTitle("⭕ ないす！")
                         .setDescription(
                             `**Round ${round} / 32**\n` +
-                            `成功確率：**${formatPercent(successRate)}**\n\n` +
-                            `⏱️ **10秒以内に選択してください**`
+                            `成功確率：**${formatPercent(nextSuccessRate)}**\n\n⏱️ **10秒以内に選択してください**`
                         )
                 ],
                 components: generateButtons()
             });
 
-            // 次のラウンドも 10秒タイムアウト
-            roundTimeout = startRoundTimeout(interaction, round, () => {
-                isGameOver = true;
-
-                interaction.editReply({
-                    embeds: [
-                        new EmbedBuilder()
-                            .setColor(0xff0000)
-                            .setTitle("⌛ Time Up")
-                            .setDescription(
-                                `**10秒以内に選択がなかったため中断されました。**\n\n` +
-                                `**${round - 1} ラウンド成功！**`
-                            )
-                    ],
-                    components: []
-                });
-
-                collector.stop();
-            });
+            roundTimeout = startRoundTimeout(interaction, round, () => endGameTimeout(interaction, round));
         });
+
+        // タイムアップ時
+        function endGameTimeout(interaction, roundNum) {
+            isGameOver = true;
+            const successRounds = roundNum - 1;
+            const successRate = (1 / (2 ** successRounds)) * 100;
+
+            interaction.editReply({
+                embeds: [
+                    new EmbedBuilder()
+                        .setColor(0xff0000)
+                        .setTitle("⌛ Time Up")
+                        .setDescription(
+                            `**10秒以内に選択がなかったため中断されました。**\n` +
+                            `**${successRounds} ラウンド成功！**` +
+                            (successRounds > 0 ? `\nここまでの成功確率：**${formatPercent(successRate)}**` : "")
+                        )
+                ],
+                components: []
+            });
+            collector.stop();
+        }
     }
 };
-
 
 function generateButtons() {
     return [
@@ -165,9 +148,7 @@ function generateButtons() {
 }
 
 function startRoundTimeout(interaction, round, onTimeout) {
-    return setTimeout(() => {
-        onTimeout();
-    }, 10000);
+    return setTimeout(onTimeout, 10000);
 }
 
 function formatPercent(num) {
