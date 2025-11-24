@@ -1,62 +1,47 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 
-const numberEmojis = [
-  "1️⃣",
-  "2️⃣",
-  "3️⃣",
-  "4️⃣",
-  "5️⃣",
-  "6️⃣",
-  "7️⃣",
-  "8️⃣",
-  "9️⃣",
-  "🔟",
-];
+const numberEmojis = ["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟"];
 
 module.exports = {
   data: {
     name: "poll",
     description: "投票を開始します",
     options: [
-      {
-        name: "choices",
-        description: "選択肢を入力してください",
-        type: 3, // 文字列
-        required: true,
-      },
-      {
-        name: "title",
-        description: "タイトルを入力してください",
-        type: 3, // 文字列
-        required: true,
-      },
+      { name: "choices", description: "選択肢を入力してください", type: 3, required: true },
+      { name: "title", description: "タイトルを入力してください", type: 3, required: true },
     ],
   },
   async execute(interaction) {
-    const choices = interaction.options.getString("choices");
-    const pollTitle = interaction.options.getString("title");
+    let choices = interaction.options.getString("choices")?.split(" ");
+    const title = interaction.options.getString("title");
 
-    if (!choices || !pollTitle) {
-      await interaction.reply("選択肢とタイトルは必須です。");
-      return;
+    if (!choices || !title) {
+      return interaction.reply({ content: "選択肢とタイトルは必須です。", ephemeral: true });
     }
 
-    const choicesArray = choices.split(" ");
+    // 10個を超えた場合は制限
+    if (choices.length > 10) {
+      choices = choices.slice(0, 10);
+    }
 
-    const embed = new MessageEmbed()
-      .setTitle(pollTitle)
-      .setColor(15221188)
+    // 応答を保留（ユーザーに見えない）
+    await interaction.deferReply({ ephemeral: true });
+
+    // Embed作成
+    const embed = new EmbedBuilder()
+      .setTitle(title)
+      .setColor("E841C4")
       .setDescription("投票を開始します！");
 
-    for (let i = 0; i < choicesArray.length; i++) {
-      embed.addField(`${numberEmojis[i]}`, choicesArray[i]);
-    }
+    choices.forEach((c, i) => embed.addFields({ name: numberEmojis[i], value: c }));
 
-    const pollChannel = interaction.channel;
-    const pollMessage = await pollChannel.send({ embeds: [embed] });
+    // 投票メッセージ送信
+    const pollMessage = await interaction.channel.send({ embeds: [embed] });
 
-    for (let i = 0; i < choicesArray.length; i++) {
-      await pollMessage.react(numberEmojis[i]);
-    }
+    // リアクションを同時に追加
+    await Promise.all(choices.map((_, i) => pollMessage.react(numberEmojis[i])));
+
+    // 保留応答を削除してユーザーに何も表示しない
+    await interaction.deleteReply();
   },
 };

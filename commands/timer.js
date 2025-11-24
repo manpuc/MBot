@@ -1,58 +1,32 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 
 module.exports = {
   data: {
     name: "timer",
-    description: "指定された分数と秒数のタイマーを開始します。",
+    description: "指定時間でタイマーを開始します",
     options: [
-      {
-        name: "minutes",
-        description: "タイマーの分数を指定してください（最大15分）。",
-        type: 4,
-        required: true,
-      },
-      {
-        name: "seconds",
-        description: "タイマーの秒数を指定してください（最大59秒）。",
-        type: 4,
-        required: true,
-      },
+      { name: "minutes", description: "分数（最大15）", type: 4, required: true },
+      { name: "seconds", description: "秒数（最大59）", type: 4, required: true },
     ],
   },
   async execute(interaction) {
-    // ここにtimerコマンドのロジックを記述します
-    const minutes = interaction.options.getInteger("minutes");
-    const seconds = interaction.options.getInteger("seconds");
+    try {
+      const m = interaction.options.getInteger("minutes");
+      const s = interaction.options.getInteger("seconds");
 
-    if (minutes > 15) {
-      await interaction.reply("タイマーの分数は最大15分までです。");
-      return;
+      if (m > 15 || s > 59) {
+        return interaction.reply({ embeds: [new EmbedBuilder().setColor("FF0000").setDescription("時間の指定が範囲外です。")], ephemeral: true });
+      }
+
+      const total = m * 60 + s;
+      await interaction.reply({ embeds: [new EmbedBuilder().setColor("E841C4").setTitle("タイマー開始").setDescription(`${m}分${s}秒で開始します。`)] });
+
+      setTimeout(async () => {
+        await interaction.followUp({ embeds: [new EmbedBuilder().setColor("E841C4").setTitle("タイマー終了").setDescription(`${interaction.user} タイマーが終了しました！`)] });
+      }, total * 1000);
+
+    } catch (err) {
+      await interaction.reply({ embeds: [new EmbedBuilder().setColor("FF0000").setDescription(`エラー: ${err.message}`)], ephemeral: true });
     }
-
-    if (seconds > 59) {
-      await interaction.reply("タイマーの秒数は最大59秒までです。");
-      return;
-    }
-
-    const totalSeconds = minutes * 60 + seconds;
-
-    const embed = new MessageEmbed()
-      .setColor(15221188)
-      .setTitle("タイマー開始")
-      .setDescription(`タイマーを ${minutes} 分 ${seconds} 秒で開始します。`);
-
-    await interaction.reply({ embeds: [embed] });
-
-    setTimeout(async () => {
-      const user = interaction.user;
-      const mention = user.toString();
-
-      const finishedEmbed = new MessageEmbed()
-        .setColor(15221188)
-        .setTitle("タイマー終了")
-        .setDescription(`${mention} タイマーが終了しました！`);
-
-      await interaction.followUp({ embeds: [finishedEmbed] });
-    }, totalSeconds * 1000);
   },
 };

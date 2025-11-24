@@ -1,7 +1,7 @@
 {
-  "name": "Discord-js-v14-template-for-glitch",
+  "name": "Manpuc-Bot-Discord-js-v14",
   "version": "14",
-  "description": "It is Discord.js v14 template.",
+  "description": "It is Discord.js v14 Bot.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -10,26 +10,32 @@
     "@discordjs/rest": "^2.6.0",
     "axios": "^1.13.2",
     "discord-api-types": "^0.38.34",
-    "discord.js": "^13.17.1",
+    "discord.js": "^14.25.1",
     "dotenv": "^17.2.3",
+    "ebur128-wasm": "^3.0.0",
     "esm": "^3.2.25",
+    "fluent-ffmpeg": "^2.1.3",
     "googleapis": "^166.0.0",
     "node-fetch": "^3.3.2",
     "random-cat-img": "^1.1.8",
+    "static-ffmpeg": "^3.2.1",
     "uuid": "^9.0.1",
     "whois": "^2.15.0",
     "whois-json": "^2.0.4"
   },
   "engines": {
-    "node": "18.x"
+    "node": "19.x"
   },
   "repository": {
-    "url": "https://glitch.com/edit/#!/discord-js-v14-template-glitch"
+    "url": "https://github.com/manpuc/MBot"
   },
   "license": "MIT",
   "keywords": [
     "node",
-    "glitch",
-    "template"
-  ]
+    "discrodbot",
+    "v14"
+  ],
+  "devDependencies": {
+    "@types/node": "^24.10.1"
+  }
 }

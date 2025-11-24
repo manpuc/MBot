@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 
 module.exports = {
   data: {
@@ -6,12 +6,11 @@ module.exports = {
     description: "現在のpingを測定します",
   },
   async execute(interaction) {
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor("E841C4")
       .setTitle("Ping")
-      .setDescription(
-        `🏓 Pong! ${Date.now() - interaction.createdTimestamp}ms`
-      );
+      .setDescription(`🏓 Pong! ${Date.now() - interaction.createdTimestamp}ms`);
+
     await interaction.reply({ embeds: [embed], ephemeral: true });
   },
 };

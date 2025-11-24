@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton, MessageEmbed, Permissions } = require("discord.js");
+const { EmbedBuilder, PermissionFlagsBits } = require("discord.js");
 
 module.exports = {
   data: {
@@ -6,10 +6,15 @@ module.exports = {
     description: "Banされたメンバーのリストを表示します",
   },
   async execute(interaction) {
+    // サーバー内でのみ使用可能
+    if (!interaction.inGuild()) {
+      await interaction.reply({ content: "このコマンドはサーバー内で使用してください。", ephemeral: true });
+      return;
+    }
+
     const member = interaction.member;
 
-    // ユーザーに'BAN_MEMBERS'権限があるか確認
-    if (!member.permissions.has(Permissions.FLAGS.BAN_MEMBERS)) {
+    if (!member.permissions.has(PermissionFlagsBits.BanMembers)) {
       await interaction.reply({ content: "必要な権限がありません。", ephemeral: true });
       return;
     }
@@ -18,19 +23,17 @@ module.exports = {
 
     try {
       const bannedMembers = await guild.bans.fetch();
-
       if (bannedMembers.size === 0) {
         await interaction.reply({ content: "Banされたメンバーはいません。", ephemeral: true });
         return;
       }
 
-      const banList = bannedMembers.map((ban) => {
-        const { user, reason } = ban;
-        const username = user.tag.replace(/#0$/, ''); // ユーザー名から'#0'を削除
-        return `**ユーザー:** ${username}\n**理由:** ${reason || "なし"}\n------------------`;
+      const banList = bannedMembers.map(ban => {
+        const username = ban.user.tag.replace(/#0$/, '');
+        return `**ユーザー:** ${username}\n**理由:** ${ban.reason || "なし"}\n------------------`;
       });
 
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor("E841C4")
         .setTitle("Banリスト")
         .setDescription(banList.join("\n"));

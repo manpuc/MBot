@@ -1,35 +1,35 @@
-const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require("discord.js");
 
 module.exports = {
-  data: {
-    name: 'server-icon',
-    description: 'サーバーのアイコン画像をダウンロードします',
-  },
+  data: { name: "server-icon", description: "サーバーのアイコン画像をダウンロードします" },
   async execute(interaction) {
-    // Check if the interaction is in a guild (server)
     if (!interaction.inGuild()) {
-      return interaction.reply('このコマンドはサーバー内でのみ利用できます。');
+      const errEmbed = new EmbedBuilder()
+        .setColor("FF0000")
+        .setTitle("エラー")
+        .setDescription("サーバー内でのみ使用できます。");
+      return await interaction.reply({ embeds: [errEmbed], ephemeral: true });
     }
 
-    const server = interaction.guild;
-    const serverIconURL = server.iconURL({ format: 'png', dynamic: true, size: 1024 });
+    const guild = interaction.guild;
+    const iconURL = guild.iconURL({ format: "png", dynamic: true, size: 1024 });
 
-    if (!serverIconURL) {
-      return interaction.reply('このサーバーのアイコンが見つかりませんでした。');
+    if (!iconURL) {
+      const errEmbed = new EmbedBuilder()
+        .setColor("FF0000")
+        .setTitle("エラー")
+        .setDescription("サーバーアイコンが見つかりません。\nサーバーアイコンが設定されているか確認してください。");
+      return await interaction.reply({ embeds: [errEmbed], ephemeral: true });
     }
 
-    const row = new MessageActionRow()
-      .addComponents(
-        new MessageButton()
-          .setStyle('LINK')
-          .setLabel('アイコンをダウンロード')
-          .setURL(serverIconURL)
-      );
+    const row = new ActionRowBuilder().addComponents(
+      new ButtonBuilder().setLabel("アイコンをダウンロード").setStyle(ButtonStyle.Link).setURL(iconURL)
+    );
 
-    const embed = new MessageEmbed()
-      .setColor('#E841C4')
-      .setTitle(`サーバーアイコン - ${server.name}`)
-      .setImage(serverIconURL);
+    const embed = new EmbedBuilder()
+      .setColor("E841C4")
+      .setTitle(`${guild.name} のサーバーアイコン`)
+      .setImage(iconURL);
 
     await interaction.reply({ embeds: [embed], components: [row], ephemeral: true });
   },

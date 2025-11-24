@@ -1,26 +1,15 @@
-const { MessageActionRow, MessageButton, MessageEmbed } = require("discord.js");
-const { v4: uuidv4 } = require("uuid"); // uuid ライブラリをインポート
+const { EmbedBuilder } = require("discord.js");
+const { v4: uuidv4 } = require("uuid");
 
 module.exports = {
-  data: {
-    name: "uuid",
-    description: "UUIDを生成して送信します",
-  },
+  data: { name: "uuid", description: "UUIDを生成します" },
   async execute(interaction) {
-    // UUIDを生成
-    const uuid = uuidv4();
-
-    // 生成されたUUIDを埋め込みメッセージで表示
-    const embed = new MessageEmbed()
-      .setColor("E841C4")
-      .setTitle("UUID!!!!")
-      .setDescription(`${uuid}`);
-
-    // ボタンを含むメッセージを返信
-    await interaction.reply({
-      content: "UUIDを生成しました:",
-      embeds: [embed],
-      ephemeral: true,
-    });
+    try {
+      const id = uuidv4();
+      const embed = new EmbedBuilder().setColor("E841C4").setTitle("UUID").setDescription(id);
+      await interaction.reply({ embeds: [embed], ephemeral: true });
+    } catch (err) {
+      await interaction.reply({ embeds: [new EmbedBuilder().setColor("FF0000").setDescription(`エラー: ${err.message}`)], ephemeral: true });
+    }
   },
 };

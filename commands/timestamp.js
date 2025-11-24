@@ -1,27 +1,20 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 
 module.exports = {
-  data: {
-    name: "timestamp",
-    description: "現在時刻のUNIXタイムスタンプを返します",
-  },
+  data: { name: "timestamp", description: "現在時刻のUNIXタイムスタンプを返します" },
   async execute(interaction) {
     try {
-      const now = Date.now(); // ミリ秒
-      const unixSec = Math.floor(now / 1000); // 秒
+      const now = Date.now();
+      const sec = Math.floor(now / 1000);
 
-      const embed = new MessageEmbed()
-        .setColor("#E841C4")
+      const embed = new EmbedBuilder()
+        .setColor("E841C4")
         .setTitle("⏱ 現在時刻")
-        .setDescription(`UNIXミリ秒: \`${now}\`\nUNIX秒: \`${unixSec}\`\nDiscord形式: <t:${unixSec}:F>`);
+        .setDescription(`UNIXミリ秒: \`${now}\`\nUNIX秒: \`${sec}\`\nDiscord形式: <t:${sec}:F>`);
 
       await interaction.reply({ embeds: [embed], ephemeral: true });
-    } catch (error) {
-      const embed = new MessageEmbed()
-        .setColor("#FF0000")
-        .setTitle("エラー")
-        .setDescription(`タイムスタンプ取得中にエラーが発生しました。\n\`${error.message}\``);
-      await interaction.reply({ embeds: [embed], ephemeral: true });
+    } catch (err) {
+      await interaction.reply({ embeds: [new EmbedBuilder().setColor("FF0000").setDescription(`エラー: ${err.message}`)], ephemeral: true });
     }
   },
 };

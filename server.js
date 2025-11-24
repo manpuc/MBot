@@ -29,7 +29,7 @@ http
   })
   .listen(process.env.PORT || 3000); // ← 修正ポイント
 
-if (!process.env.DISCORD_BOT_TOKEN) {
+if (!"MTA0MDU2MTg3NDI3OTg3MDQ4NA.GkhWBH.N90MFJLmnT3yzAPcc4Woyrx1exzPgFEXsAS824") {
   console.log("DISCORD_BOT_TOKENを設定してください。");
   process.exit(0);
 }

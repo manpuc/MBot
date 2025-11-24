@@ -1,108 +1,50 @@
-const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionsBitField } = require("discord.js");
 
 module.exports = {
-  data: {
-    name: "thread-delete",
-    description: "スレッドを削除します",
-  },
+  data: { name: "thread-delete", description: "スレッドを削除します" },
   async execute(interaction) {
-    // スレッドが存在するか確認
-    if (!interaction.channel.isThread()) {
-      return interaction.reply("このコマンドはスレッド上でのみ使用できます。");
-    }
+    try {
+      if (!interaction.channel.isThread()) {
+        return interaction.reply({ embeds: [new EmbedBuilder().setColor("FF0000").setDescription("このコマンドはスレッド上でのみ使用できます。")], ephemeral: true });
+      }
 
-    // 確認メッセージを作成
-    const confirmationEmbed = new MessageEmbed()
-      .setColor("E841C4")
-      .setTitle("スレッド削除の確認")
-      .setDescription(
-        `スレッド "${interaction.channel.name}" を削除しますか？`
+      if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageThreads)) {
+        return interaction.reply({ embeds: [new EmbedBuilder().setColor("FF0000").setDescription("スレッドを削除する権限がありません。")], ephemeral: true });
+      }
+
+      const embed = new EmbedBuilder().setColor("E841C4").setTitle("スレッド削除の確認").setDescription(`スレッド "${interaction.channel.name}" を削除しますか？`);
+      const row = new ActionRowBuilder().addComponents(
+        new ButtonBuilder().setCustomId("delete_thread_confirmation").setStyle(ButtonStyle.Danger).setLabel("削除する"),
+        new ButtonBuilder().setCustomId("delete_thread_cancel").setStyle(ButtonStyle.Primary).setLabel("キャンセル")
       );
 
-    // 確認用ボタンを作成
-    const confirmationButton = new MessageButton()
-      .setCustomId("delete_thread_confirmation")
-      .setStyle("DANGER")
-      .setLabel("削除する");
+      await interaction.reply({ embeds: [embed], components: [row], ephemeral: true });
 
-    // キャンセル用ボタンを作成
-    const cancelButton = new MessageButton()
-      .setCustomId("delete_thread_cancel")
-      .setStyle("PRIMARY")
-      .setLabel("キャンセル");
+      const filter = i => i.user.id === interaction.user.id;
+      const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000, max: 1 });
 
-    // ボタンを含む行を作成
-    const row = new MessageActionRow().addComponents(
-      confirmationButton,
-      cancelButton
-    );
-
-    // 確認メッセージを送信
-    await interaction.reply({
-      embeds: [confirmationEmbed],
-      components: [row],
-      ephemeral: true,
-    });
-
-    // ユーザーの反応を待機
-    const filter = (i) =>
-      i.customId === "delete_thread_confirmation" ||
-      i.customId === "delete_thread_cancel";
-    const collector = interaction.channel.createMessageComponentCollector({
-      filter,
-      time: 15000, // 15秒間待機
-      max: 1,
-    });
-
-    // ユーザーの反応を処理
-    collector.on("collect", async (i) => {
-      if (i.customId === "delete_thread_confirmation") {
-        try {
-          // スレッドを削除
-          await interaction.channel.delete();
-
-          // 削除が成功したメッセージを送信
-          const successEmbed = new MessageEmbed()
-            .setColor("E841C4")
-            .setTitle("スレッド削除")
-            .setDescription(`スレッド "${interaction.channel.name}" を削除しました。`);
-
-          await interaction.editReply({
-            embeds: [successEmbed],
-            components: [],
-          });
-        } catch (error) {
-          console.error(error);
-          return interaction.editReply("スレッドの削除中にエラーが発生しました。");
+      collector.on("collect", async i => {
+        if (i.customId === "delete_thread_confirmation") {
+          try {
+            await interaction.channel.delete();
+            // スレッド削除後は update せず interaction を完了させる
+            await i.deferUpdate();
+          } catch (err) {
+            await i.update({ embeds: [new EmbedBuilder().setColor("FF0000").setDescription("スレッド削除中にエラーが発生しました。")], components: [] });
+          }
+        } else {
+          await i.update({ embeds: [new EmbedBuilder().setColor("E841C4").setDescription("削除をキャンセルしました。")], components: [] });
         }
-      } else if (i.customId === "delete_thread_cancel") {
-        // キャンセルが選択された場合はメッセージを更新して終了
-        const cancelEmbed = new MessageEmbed()
-          .setColor("E841C4")
-          .setTitle("スレッド削除")
-          .setDescription("スレッドの削除がキャンセルされました。");
+      });
 
-        await interaction.editReply({
-          embeds: [cancelEmbed],
-          components: [],
-        });
-      }
-    });
+      collector.on("end", (collected, reason) => {
+        if (reason === "time" && collected.size === 0) {
+          interaction.editReply({ embeds: [new EmbedBuilder().setColor("E841C4").setDescription("確認タイムアウトしました。")], components: [] });
+        }
+      });
 
-    // ユーザーの反応がない場合（タイムアウト）
-    collector.on("end", (collected, reason) => {
-      if (reason === "time") {
-        // タイムアウトが発生した場合はメッセージを更新して終了
-        const timeoutEmbed = new MessageEmbed()
-          .setColor("E841C4")
-          .setTitle("スレッド削除")
-          .setDescription("スレッド削除の確認がタイムアウトしました。");
-
-        interaction.editReply({
-          embeds: [timeoutEmbed],
-          components: [],
-        });
-      }
-    });
+    } catch (error) {
+      await interaction.reply({ embeds: [new EmbedBuilder().setColor("FF0000").setDescription(`エラー: ${error.message}`)], ephemeral: true });
+    }
   },
 };

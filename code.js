@@ -1,148 +1,144 @@
-const { Client, Intents, MessageEmbed, userMention } = require("discord.js");
-const { REST } = require("@discordjs/rest");
-const { Routes } = require("discord-api-types/v10");
-const apiKey = process.env.YOUTUBE_API_KEY;
-
+require('dotenv').config();
 const fs = require("fs");
 const path = require("path");
+const { 
+  Client, 
+  GatewayIntentBits, 
+  Partials, 
+  EmbedBuilder 
+} = require("discord.js");
+const { REST } = require("@discordjs/rest");
+const { Routes } = require("discord-api-types/v10");
 
+// ─────────────── コマンド関連 ───────────────
 const commandsFolder = path.join(__dirname, "commands");
+const commandFiles = fs.readdirSync(commandsFolder).filter(file => file.endsWith(".js"));
 
-// コマンドファイルを読み込む
 const commands = [];
-const commandFiles = fs
-  .readdirSync(commandsFolder)
-  .filter((file) => file.endsWith(".js"));
+const commandMap = new Map();
+
 for (const file of commandFiles) {
   const command = require(path.join(commandsFolder, file));
   commands.push(command.data);
+  commandMap.set(command.data.name, command);
 }
 
-const rest = new REST({ version: "10" }).setToken(
-  process.env.DISCORD_BOT_TOKEN
-);
+// REST API でアプリケーションコマンドを登録
+const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_BOT_TOKEN);
 
-async function main() {
-  console.log("main() started");  // ← 追加
+async function registerCommands() {
   try {
     await rest.put(
       Routes.applicationCommands(process.env.DISCORD_BOT_CLIENT_ID),
-      {
-        body: commands,
-      }
+      { body: commands }
     );
-    console.log("Successfully registered application commands.");
+    console.log("✅ Successfully registered application commands.");
   } catch (error) {
-    console.error("Error registering commands:", error);
+    console.error("❌ Error registering commands:", error);
   }
 }
 
+// ─────────────── Discord Client ───────────────
 const client = new Client({
   intents: [
-    Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-    Intents.FLAGS.DIRECT_MESSAGES,
-    Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
-    Intents.FLAGS.GUILD_VOICE_STATES,
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.DirectMessageReactions,
+    GatewayIntentBits.GuildVoiceStates,
   ],
+  partials: [Partials.Channel],
 });
 
+// ─────────────── ギルド参加時 ───────────────
 client.on('guildCreate', (guild) => {
-  // このイベントはボットが新しいサーバー（ギルド）に参加したときにトリガーされます。
-  // 'guild' パラメータを使用してサーバーの情報にアクセスできます。
-
   const serverData = {
     name: guild.name,
     memberCount: guild.memberCount,
   };
-
-  // これで 'serverData' を JSON ファイルやデータベースに記録することができます。
-  // たとえば、データを JSON ファイルに保存する場合：
-  const serverDataFile = path.join(__dirname, "data", "joinServer.json");
-  const existingData = fs.existsSync(serverDataFile) ? JSON.parse(fs.readFileSync(serverDataFile)) : [];
-  
-  existingData.push(serverData);
-
-  fs.writeFileSync(serverDataFile, JSON.stringify(existingData, null, 2));
-
-  // この情報をログに記録するか、他の任意のアクションを実行することもできます。
-  console.log(`ボットがサーバーに参加しました: ${guild.name}（メンバー数: ${guild.memberCount}）`);
+  console.log(`⚡ ボットがサーバーに参加しました: ${guild.name}（${guild.memberCount}人）`);
 });
 
+// ─────────────── メッセージ監視 ───────────────
+//client.on('messageCreate', (message) => {
+//  if (message.author.bot) return;
+//
+//  const content = message.content.toLowerCase();
+//
+//  if (content.includes('くぁｗせｄｒｆｔｇｙふじこｌｐ') && Math.random() < 0.2) {
+//    message.reply('とりま落ち着け。');
+//    client.users.send(
+//      message.author.id,
+//      `<@${message.author.id}>さんおはこんばんにちは MBotはサポートが終了しました\nセキュリティーに問題があるので今すぐMBotを削除してください`
+//    );
+//  }
+//
+//  if (content.includes('おやすみ') && Math.random() < 0.2) {
+//    message.reply('おやすみなさい！いい夢見てね！');
+//  }
+//});
 
-client.on('messageCreate', (message) => {
-  if (message.author.bot) return;
-  const content = message.content.toLowerCase();
-
-  if (content.includes('くぁｗせｄｒｆｔｇｙふじこｌｐ')) {
-    if (Math.random() < 0.2) {
-      message.reply('とりま落ち着け。');
-      const userId = message.author.id;
-      client.users.send(
-        userId,
-        `<@${userId}>さんおはこんばんにちは MBotはサポートが終了しました\nセキュリティーに問題があるので今すぐMBotを削除してください`
-      );
-    }
-  }
-  if (content.includes('おやすみ')) {
-    if (Math.random() < 0.2) {
-      message.reply('おやすみなさい！いい夢見てね！');
-    }
-  }
-});
-
-
-
-client.on("debug", console.log); 
+// ─────────────── Ready ───────────────
 client.on("ready", async () => {
-  console.log(`Logged in as ${client.user.tag}`);
+  console.log(`✅ Logged in as ${client.user.tag}`);
   client.user.setPresence({
-    activities: [{ name: "MBotのここがすごい！　　　　　　　" }],
+    activities: [{ name: "MBotのここがすごい！" }],
     status: "online",
   });
-  main();
+
+  registerCommands();
 });
 
-client.on("interactionCreate", async (interaction) => {
+// ─────────────── Interaction ───────────────
+const cooldowns = new Map(); // ユーザーID -> 最後に使った時間
+const COOLDOWN_SECONDS = 2; // クールダウン時間（秒）
+
+client.on("interactionCreate", async interaction => {
   if (!interaction.isCommand()) return;
 
-  const commandName = interaction.commandName;
+  const userId = interaction.user.id;
+  const now = Date.now();
 
-  // 修正：ファイル名ではなく command.data.name で一致させる
-  let command;
-  for (const file of commandFiles) {
-    const cmd = require(path.join(commandsFolder, file));
-    if (cmd.data && cmd.data.name === commandName) {
-      command = cmd;
-      break;
+  if (cooldowns.has(userId)) {
+    const expirationTime = cooldowns.get(userId) + COOLDOWN_SECONDS * 1000;
+    if (now < expirationTime) {
+      const remaining = Math.ceil((expirationTime - now) / 1000);
+      
+      // クールダウン延長：ここで現在時刻を更新
+      cooldowns.set(userId, now);
+
+      return interaction.reply({
+        content: `⏳ クールダウン中です。あと 3 秒後再度お試しください。`,
+        ephemeral: true
+      });
     }
   }
 
-  if (!command) {
-    console.error(`Unknown command: ${commandName}`);
-    return await interaction.reply("未知のコマンドです。");
-  }
+  // 通常時も現在時刻で更新
+  cooldowns.set(userId, now);
 
-  // 権限チェック（既存のまま）
-  const restrictedCommands = ["muteall", "unmuteall", "unmuteall-timer", "set-report-channel", "remove-report-channel"];
-  if (restrictedCommands.includes(commandName)) {
-    if (!interaction.member.permissions.has("ADMINISTRATOR")) {
-      const ErrEmbed = new MessageEmbed()
-        .setColor(15221188)
-        .setTitle("えろー")
-        .setDescription("このコマンドを使用する権限がありません。");
-      await interaction.reply({ embeds: [ErrEmbed] });
-      return;
+  const command = commandMap.get(interaction.commandName);
+  if (!command) return;
+
+  try {
+    await command.execute(interaction);
+  } catch (err) {
+    console.error("⚠ コマンド実行エラー:", err);
+    try {
+      if (interaction.deferred) {
+        await interaction.editReply("コマンド実行中にエラーが発生しました。");
+      } else if (interaction.replied) {
+        await interaction.followUp({ content: "コマンド実行中にエラーが発生しました。", ephemeral: true });
+      } else {
+        await interaction.reply({ content: "コマンド実行中にエラーが発生しました。", ephemeral: true });
+      }
+    } catch (finalErr) {
+      console.error("⚠ エラー処理中のエラー:", finalErr);
     }
   }
-
-  // コマンド実行
-  command.execute(interaction);
 });
 
 
-//おフラインにします
-//process.exit()
-
+// ─────────────── Botログイン ───────────────
 client.login(process.env.DISCORD_BOT_TOKEN);

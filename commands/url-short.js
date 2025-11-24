@@ -1,47 +1,20 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 
 module.exports = {
-  data: {
-    name: "url-short",
-    description: "URLを短縮します",
-    options: [
-      {
-        name: "url",
-        type: 3, // STRING
-        description: "短縮するURL",
-        required: true,
-      },
-    ],
-  },
+  data: { name: "url-short", description: "URLを短縮します", options: [{ name: "url", type: 3, description: "短縮するURL", required: true }] },
   async execute(interaction) {
-    const url = interaction.options.getString("url");
+    try {
+      const url = interaction.options.getString("url");
+      const fetch = (await import("node-fetch")).default;
 
-    // Use dynamic import to load node-fetch
-    const fetch = (await import("node-fetch")).default;
+      const res = await fetch("https://cleanuri.com/api/v1/shorten", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ url }) });
 
-    // CleanURIのAPIを使用してURLを短縮
-    const response = await fetch(`https://cleanuri.com/api/v1/shorten`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ url }),
-    });
+      if (!res.ok) throw new Error("URL短縮APIエラー");
+      const data = await res.json();
 
-    if (response.ok) {
-      const data = await response.json();
-      const shortenedUrl = data.result_url;
-
-      const embed = new MessageEmbed()
-        .setColor("E841C4")
-        .setTitle("URL Shortening!!")
-        .addField("元のURL", url)
-        .addField("短縮URL", shortenedUrl);
-
-      await interaction.reply({ embeds: [embed], ephemeral: true });
-    } else {
-      // エラーが発生した場合の処理
-      await interaction.reply("URLの短縮中にエラーが発生しました。");
+      await interaction.reply({ embeds: [new EmbedBuilder().setColor("E841C4").setTitle("URL Shortened").addFields({ name: "元のURL", value: url }, { name: "短縮URL", value: data.result_url })], ephemeral: true });
+    } catch (err) {
+      await interaction.reply({ embeds: [new EmbedBuilder().setColor("FF0000").setDescription(`エラー: ${err.message}`)], ephemeral: true });
     }
   },
 };

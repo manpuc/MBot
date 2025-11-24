@@ -1,41 +1,33 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder, PermissionsBitField } = require("discord.js");
 
 module.exports = {
   data: {
     name: "thread-make",
     description: "スレッドを作成します",
-    options: [
-      {
-        name: "thread-name",
-        description: "スレッドの名前",
-        type: 3, // 3はSTRINGを表します
-        required: true,
-      },
-    ],
+    options: [{ name: "thread-name", description: "スレッドの名前", type: 3, required: true }],
   },
   async execute(interaction) {
-    // コマンドからスレッド名を取得
-    const threadName = interaction.options.getString("thread-name");
+    try {
+      // スレッド作成権限があるか確認
+      if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageThreads)) {
+        return interaction.reply({ embeds: [new EmbedBuilder().setColor("FF0000").setDescription("スレッドを作成する権限がありません。")], ephemeral: true });
+      }
 
-    // スレッドを作成
-    const threadChannel = await interaction.channel.threads.create({
-      name: threadName,
-      autoArchiveDuration: 60, // スレッドの自動アーカイブ時間を60分に設定
-    });
+      const name = interaction.options.getString("thread-name");
+      const thread = await interaction.channel.threads.create({ name, autoArchiveDuration: 60 });
 
-    // スレッドのURLを生成
-    const threadURL = `https://discord.com/channels/${interaction.guild.id}/${threadChannel.id}`;
+      const embed = new EmbedBuilder()
+        .setColor("E841C4")
+        .setTitle("スレッド作成")
+        .setDescription(`スレッド "${name}" が作成されました！`)
+        .addFields(
+          { name: "スレッドURL", value: `https://discord.com/channels/${interaction.guild.id}/${thread.id}` },
+          { name: "スレッドID", value: thread.id }
+        );
 
-    // Embedを作成してスレッドのURLとIDを埋め込む
-    const embed = new MessageEmbed()
-      .setColor("E841C4")
-      .setTitle("スレッド作成")
-      .setDescription(`スレッド "${threadName}" が作成されました！`)
-      .addFields(
-        { name: "スレッドURL", value: threadURL },
-        { name: "スレッドID", value: threadChannel.id }
-      ); // スレッドのURLとIDを埋め込む
-
-    await interaction.reply({ embeds: [embed], ephemeral: true });
+      await interaction.reply({ embeds: [embed], ephemeral: true });
+    } catch (err) {
+      await interaction.reply({ embeds: [new EmbedBuilder().setColor("FF0000").setDescription(`エラー: ${err.message}`)], ephemeral: true });
+    }
   },
 };
